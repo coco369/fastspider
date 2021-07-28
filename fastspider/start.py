@@ -1,4 +1,5 @@
-from commands.cmdline import execute
+from fastspider.commands.cmdline import execute
 
-if __name__ == "__main__":
+
+def main():
 	execute()

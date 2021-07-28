@@ -10,7 +10,7 @@ Desc: 创建爬虫项目
 import os
 import re
 
-from utils import tools
+from fastspider.utils import tools
 
 
 class CreateFastSpider(object):

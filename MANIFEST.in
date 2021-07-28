@@ -1,0 +1,9 @@
+include README.md
+include LICENSE
+
+include fastspider/requirements.txt
+include fastspider/VERSION
+
+recursive-include fastspider/templates *
+
+global-exclude __pycache__ *.py[cod]
