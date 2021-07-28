@@ -19,15 +19,15 @@ with open(os.path.join(os.path.join(os.path.dirname(__file__), "fastspider"), "r
 
 setuptools.setup(
 	name="fastspider",
+	packages=setuptools.find_packages(),
 	version=version,
 	description="fastspider 爬虫框架",
 	long_description=readme,
 	author="wanghaifei",
-	auth_email="wanghaifei36@126.com",
+	author_email="wanghaifei36@126.com",
 	url="https://github.com/coco369/fastspider.git",
 	python_requires=">=3.6",
-	license="",
 	install_requires=all_requires,
-	entry_points={"console_scripts": ["fastspider = fastspider.commands.cmdline:execute"]},
-	classifiers=["Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License"],
+	entry_points={"console_scripts": ["fastspider=fastspider.commands.cmdline:execute"]},
+	classifiers=["Programming Language :: Python :: 3"],
 )

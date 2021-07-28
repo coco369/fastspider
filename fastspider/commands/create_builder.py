@@ -9,7 +9,7 @@ Desc: 解析启动命令行参数, 并创建对应的爬虫
 """
 import argparse
 
-from fastspider.commands.create.create_spider import CreateFastSpider
+from create.create_spider import CreateFastSpider
 
 
 def create():

@@ -10,7 +10,7 @@ Desc: 创建爬虫项目
 import os
 import re
 
-import fastspider.utils.tools as tools
+from utils import tools
 
 
 class CreateFastSpider(object):
@@ -32,7 +32,8 @@ class CreateFastSpider(object):
 			raise Exception('spider_type error, must choice "air" "nomal" "cycle" ')
 
 		with open(os.path.join(os.path.join(
-				os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "templates"), "spiders")), tmp_name)) as f:
+				os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "templates"),
+				             "spiders")), tmp_name)) as f:
 			spider_template = f.read()
 
 		return spider_template
@@ -48,7 +49,7 @@ class CreateFastSpider(object):
 		spider_template = spider_template.replace("{{spider_class_name}}", spider_class_name)
 		spider_file = f"{spider_name}.py"
 		if os.path.exists(spider_file):
-			input_params = input(f"文件{spider_file}已存在, 请选择覆盖y 还是 取消此操作n")
+			input_params = input(f"文件{spider_file}已存在, 请选择覆盖y 还是 取消此操作n: ")
 			if input_params not in ['y', 'Y']:
 				print("取消创建爬虫的操作 退出")
 				return
