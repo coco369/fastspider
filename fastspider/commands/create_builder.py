@@ -9,7 +9,7 @@ Desc: 解析启动命令行参数, 并创建对应的爬虫
 """
 import argparse
 
-from commands.create.create_spider import CreateFastSpider
+from create.create_spider import CreateFastSpider
 
 
 def create():
@@ -37,4 +37,4 @@ def create():
 		else:
 			raise Exception('spider_type error, must choice "air" "nomal" "cycle" ')
 
-		CreateFastSpider.create(spider_name, spider_type)
+		CreateFastSpider().create(spider_name, spider_type)

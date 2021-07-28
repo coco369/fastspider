@@ -1,0 +1,13 @@
+# encoding=utf-8
+
+class ${spider_class_name}(fastspider.AirSpider):
+
+	def start_requests(self):
+	    yield fastspider.Request("http://www.baidu.com")
+
+	def parse(self):
+	    print(response.text)
+
+
+if __name__ == "__main__":
+    ${spider_class_name}().start()
