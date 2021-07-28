@@ -10,7 +10,7 @@ Desc: 解析启动命令行参数, 并创建对应的爬虫
 import os
 import sys
 
-import create_builder
+from commands import create_builder
 
 
 def _print_command_desc():
@@ -47,5 +47,4 @@ def execute():
 		_print_command_desc()
 
 
-if __name__ == "__main__":
-	execute()
+
