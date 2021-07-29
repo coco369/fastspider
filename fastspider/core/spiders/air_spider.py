@@ -40,7 +40,7 @@ class AirSpider(AirBase, Thread):
 			将start_response中的任务Request对象存储到内存队列中
 		:return: None
 		"""
-		for req in self.start_request():
+		for req in self.start_requests():
 			if not isinstance(req, Request):
 				raise Exception("返回参数错误, 当前只支持yield fastspider.Request对象")
 
@@ -51,14 +51,14 @@ class AirSpider(AirBase, Thread):
 			判断内存队列中的任务是否执行完毕
 		:return: True: 已执行完所有任务。 False: 还有处于待执行中的任务
 		"""
+		for i in range(3):
+			for parser_controller in self._parser_controller:
+				if parser_controller.has_task():
+					return False
 
-		for parser_controller in self._parser_controller:
-			if parser_controller.has_task():
+			# 检测任务队列是否为空
+			if not self._memory_db.is_empty():
 				return False
-
-		# 检测任务队列是否为空
-		if not self._memory_db.is_empty():
-			return False
 
 		return True
 
@@ -66,8 +66,8 @@ class AirSpider(AirBase, Thread):
 		"""
 			启动线程
 		"""
+		# 先将任务监听的控制方法启动, 再通过add_task将需要爬取的request对象写入, 通过while检测任务执行的情况, 任务执行完, 则暂定任务_thread_stop设置为True
 		for i in range(self._thread_count):
-
 			spider_controller = AirSpiderController(self._memory_db)
 			spider_controller.add_parser(self)
 			spider_controller.start()
@@ -85,3 +85,5 @@ class AirSpider(AirBase, Thread):
 					parser_controller.stop()
 
 				print("无任务, 爬虫执行完毕")
+
+				break

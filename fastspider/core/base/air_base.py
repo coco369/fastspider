@@ -11,7 +11,7 @@ Desc: fastspider核心爬虫AirSpider的基类代码
 
 class AirBase(object):
 
-	def start_request(self):
+	def start_requests(self):
 		"""
 			解析url地址
 		:return: 返回可迭代的yield Request()
@@ -25,4 +25,11 @@ class AirBase(object):
 		:param response: 响应对象
 		:return: 可不返回内容, 或者返回Item对象
 		"""
+		pass
+
+	def start_callback(self):
+		pass
+
+	def end_callback(self):
+
 		pass
