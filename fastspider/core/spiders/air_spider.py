@@ -10,6 +10,7 @@ Desc: fastspider核心代码, 轻量级爬虫air_spider
 from threading import Thread
 
 from fastspider.core.base.air_base import AirBase
+from fastspider.core.controller.spider_controller import AirSpiderController
 from fastspider.db.memory_db import MemoryDB
 from fastspider.http.request.request import Request
 from fastspider.settings import common
@@ -24,7 +25,11 @@ class AirSpider(AirBase, Thread):
 			初始化配置
 			用户可自定义settings配置, 配置变量为__common_settings__, 类型为dict
 		"""
+		super(AirSpider, self).__init__()
+
 		self._memory_db = MemoryDB()
+
+		self._parser_controller = []
 
 		for k, v in self.__class__.__common_settings__.items():
 			setattr(common, k, v)
@@ -41,13 +46,42 @@ class AirSpider(AirBase, Thread):
 
 			self._memory_db.put(req)
 
+	def all_thread_task_done(self):
+		"""
+			判断内存队列中的任务是否执行完毕
+		:return: True: 已执行完所有任务。 False: 还有处于待执行中的任务
+		"""
+
+		for parser_controller in self._parser_controller:
+			if parser_controller.has_task():
+				return False
+
+		# 检测任务队列是否为空
+		if not self._memory_db.is_empty():
+			return False
+
+		return True
+
 	def run(self):
 		"""
 			启动线程
 		"""
 		for i in range(self._thread_count):
 
-			pass
+			spider_controller = AirSpiderController(self._memory_db)
+			spider_controller.add_parser(self)
+			spider_controller.start()
+
+			self._parser_controller.append(spider_controller)
 
 		# 将任务放在内存中
 		self.add_task()
+
+		# 死循环, 一直执行任务, 判断任务task是否执行完成, 如果任务执行完毕, 则关闭各种链接，如mysql, 浏览器对象
+		while True:
+			if self.all_thread_task_done():
+
+				for parser_controller in self._parser_controller:
+					parser_controller.stop()
+
+				print("无任务, 爬虫执行完毕")
