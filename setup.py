@@ -17,16 +17,6 @@ with open(os.path.join(os.path.join(os.path.dirname(__file__), "fastspider"), "r
 		if package.decode().strip():
 			all_requires.append(package.decode().strip())
 
-packages = setuptools.find_packages()
-packages.extend(
-	[
-		"fastspider",
-		"fastspider.templates",
-		"fastspider.templates.project",
-		"fastspider.templates.spiders",
-	]
-)
-
 setuptools.setup(
 	name="fastspider",
 	version=version,
@@ -38,7 +28,7 @@ setuptools.setup(
 	entry_points={"console_scripts": ["fastspider=fastspider.start:main"]},
 	url="https://github.com/coco369/fastspider.git",
 	install_requires=all_requires,
-	packages=packages,
+	packages=setuptools.find_packages(),
 	include_package_data=True,
 	classifiers=["Programming Language :: Python :: 3"],
 )
