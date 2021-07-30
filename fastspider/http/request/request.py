@@ -12,6 +12,7 @@ import urllib3
 from requests.adapters import HTTPAdapter
 
 from fastspider.http import user_agent
+from fastspider.http.response.response import Response
 from fastspider.settings import common
 from fastspider.utils import tools
 
@@ -109,11 +110,10 @@ class Request(object):
 			if abuyun_proxies:
 				self.request_kwargs.update(proxies=abuyun_proxies)
 
-			# TODO: 如果没有隧道代理, 则可以使用IP代理
+		# TODO: 如果没有隧道代理, 则可以使用IP代理
 
 		# 浏览器渲染
-
-
+		# TODO: 暂不支持浏览器渲染
 
 		# 设置session
 		use_session = self.use_session if self.use_session else common.USE_SESSION
@@ -123,5 +123,5 @@ class Request(object):
 			response = requests.request(method=method, url=self.url, **self.request_kwargs)
 
 		# TODO: 封装response
-
+		response = Response(response)
 		return response
