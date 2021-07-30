@@ -8,7 +8,7 @@ class {{spider_class_name}}(fastspider.AirSpider):
 	def start_requests(self):
 	    yield fastspider.Request("http://www.baidu.com")
 
-	def parse(self, response):
+	def parse(self, request, response):
 	    print(response.text)
 
 
