@@ -26,3 +26,13 @@ USE_SESSION = False
 SPIDER_SLEEP_TIME = (
     0
 )
+
+# 是否开启代理
+PROXY_ENABLE = True
+# 是否使用隧道代理
+PROXY_TUNNEL_HOST = None
+PROXY_TUNNEL_PORT = None
+PROXY_TUNNEL_USER = None
+PROXY_TUNNEL_PASSWORD = None
+
+
