@@ -44,6 +44,8 @@ class AirSpider(AirBase, Thread):
 			if not isinstance(req, Request):
 				raise Exception("返回参数错误, 当前只支持yield fastspider.Request对象")
 
+			# 将当前请求的类名添加到request对象上
+			req.parser_name = req.parser_name or self.name
 			self._memory_db.put(req)
 
 	def all_thread_task_done(self):
@@ -69,6 +71,7 @@ class AirSpider(AirBase, Thread):
 		# 先将任务监听的控制方法启动, 再通过add_task将需要爬取的request对象写入, 通过while检测任务执行的情况, 任务执行完, 则暂定任务_thread_stop设置为True
 		for i in range(self._thread_count):
 			spider_controller = AirSpiderController(self._memory_db)
+			# 将当前执行的爬虫实例对象添加到线程中
 			spider_controller.add_parser(self)
 			spider_controller.start()
 

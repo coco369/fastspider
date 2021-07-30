@@ -10,3 +10,19 @@ Desc: 配置文件
 
 # 爬虫配置
 SPIDER_THREAD_COUNT = 1  # 爬虫并发数
+
+# request网络请求超时时间
+REQUEST_TIMEOUT = 22  # 等待服务器响应的超时时间，浮点数，或(connect timeout, read timeout)元组
+
+# UserAgent类型 支持 'chrome', 'opera', 'firefox', 'internetexplorer', 'safari'，若不指定则随机类型
+USER_AGENT_TYPE = "chrome"
+
+# requests 使用session
+USE_SESSION = False
+
+# 下载时间间隔 单位秒。
+# 支持格式, 如 SPIDER_SLEEP_TIME = 3
+# 如 SPIDER_SLEEP_TIME = [2, 5] 或者 (2, 5) 则间隔为 2~5秒之间的随机数，包含2和5
+SPIDER_SLEEP_TIME = (
+    0
+)
