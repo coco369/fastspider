@@ -52,7 +52,6 @@ def sleep_time(times):
 	time.sleep(times)
 
 
-# 装饰器
 class Singleton(object):
 	def __init__(self, cls):
 		self._cls = cls
@@ -62,3 +61,11 @@ class Singleton(object):
 		if self._cls not in self._instance:
 			self._instance[self._cls] = self._cls(*args, **kwargs)
 		return self._instance[self._cls]
+
+
+def cookies2dict(cookies):
+	cookie_dict = {}
+	for i in cookies.split(";"):
+		cookie = i.split("=")
+		cookie_dict[cookie[0]] = cookie[1]
+	return cookie_dict

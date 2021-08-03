@@ -8,6 +8,7 @@ CreateTime: 2021/07/30
 Desc: fastspider核心代码, 封装response包
 """
 from bs4 import BeautifulSoup
+from requests.cookies import RequestsCookieJar
 from requests.models import Response as res
 
 # from fastspider.http.selector import Selector
@@ -47,6 +48,10 @@ class Response(res):
 			组装响应response
 		:return:
 		"""
+		# 设置cookie
+		cookie_jar = RequestsCookieJar()
+		cookie_jar.update(other=response_dict["cookies"])
+		response_dict["cookies"] = cookie_jar
 
 		response = res()
 		response.__dict__.update(response_dict)

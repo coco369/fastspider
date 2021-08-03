@@ -93,6 +93,13 @@ class WebDriver(WebDriver):
 		)
 		return driver
 
+	@property
+	def cookies(self):
+		new_cookies = {}
+		for cookie in self.get_cookies():
+			new_cookies[cookie["name"]] = cookie["value"]
+		return new_cookies
+
 
 @Singleton
 class WebDriverPool(object):
@@ -128,3 +135,9 @@ class WebDriverPool(object):
 	def remove(self, driver):
 		driver.close()
 		self.queue_count -= 1
+
+	def close(self):
+		while not self.queue.empty():
+			driver = self.queue.get()
+			driver.close()
+			self.queue_count -= 1

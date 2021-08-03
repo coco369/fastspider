@@ -39,11 +39,13 @@ class Request(object):
 		"download_middleware": None,
 		"web_render": False,
 		"web_render_time": 0,
+		"web_render_scroll": False,
 		"request_sync": False
 	}
 
 	def __init__(self, url="", retry_time=0, parser_name=None, callback=None, use_session=False,
-	             download_middleware=None, web_render=False, web_render_time=0, request_sync=False, **kwargs):
+	             download_middleware=None, web_render=False, web_render_time=0, web_render_scroll=False,
+	             request_sync=False, **kwargs):
 		self.url = url
 		self.retry_time = retry_time
 		self.parser_name = parser_name
@@ -53,6 +55,7 @@ class Request(object):
 		self.download_middleware = download_middleware
 		self.web_render = web_render
 		self.web_render_time = web_render_time
+		self.web_render_scroll = web_render_scroll
 
 		self.request_kwargs = {}
 		for key, value in kwargs.items():
@@ -129,6 +132,14 @@ class Request(object):
 
 				driver.get(self.url)
 
+				if self.web_render_scroll:
+					js = "return action=document.body.scrollHeight"
+					height = driver.execute_script(js)
+					for i in range(0, height, 150):
+						if self.web_render_time:
+							tools.sleep_time(self.web_render_time)
+						driver.execute_script(f"window.scrollTo(0, {i})")
+
 				if self.web_render_time:
 					tools.sleep_time(self.web_render_time)
 
@@ -136,10 +147,13 @@ class Request(object):
 				response = Response.from_dict({
 					"status_code": 200,
 					"_content": html,
-					"url": self.url
+					"url": self.url,
+					"cookies": driver.cookies
 				})
 				response.driver = driver
 			except Exception as e:
+				raise e
+			finally:
 				self._webdriver_pool.remove(driver)
 
 		# 设置session
