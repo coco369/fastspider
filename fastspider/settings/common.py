@@ -24,7 +24,7 @@ USE_SESSION = False
 # 支持格式, 如 SPIDER_SLEEP_TIME = 3
 # 如 SPIDER_SLEEP_TIME = [2, 5] 或者 (2, 5) 则间隔为 2~5秒之间的随机数，包含2和5
 SPIDER_SLEEP_TIME = (
-    0
+	0
 )
 
 # 是否开启代理
@@ -35,4 +35,13 @@ PROXY_TUNNEL_PORT = None
 PROXY_TUNNEL_USER = None
 PROXY_TUNNEL_PASSWORD = None
 
-
+# 浏览器渲染
+WEBDRIVER = dict(
+	load_images=True,  # 是否加载图片
+	user_agent=None,  # 字符串 或 无参函数，返回值为user_agent
+	proxies=None,  # xxx.xxx.xxx.xxx:xxxx 或 无参函数，返回值为代理地址
+	headless=True,  # 是否为无头浏览器
+	driver_type="Chrome",  # CHROME、PHANTOMJS、FIREFOX
+	timeout=30,  # 请求超时时间
+	window_size=(1024, 800),  # 窗口大小
+)

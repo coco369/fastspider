@@ -12,6 +12,7 @@ import urllib3
 from requests.adapters import HTTPAdapter
 
 from fastspider.http import user_agent
+from fastspider.http.fastselenium.fastwebdriver import WebDriverPool
 from fastspider.http.response.response import Response
 from fastspider.settings import common
 from fastspider.utils import tools
@@ -23,6 +24,7 @@ urllib3.disable_warnings()
 class Request(object):
 	user_agent_pool = user_agent
 	proxies_pool = None
+	webdriver_pool = None
 	session = None
 
 	# 组装非必须传入的参数
@@ -71,8 +73,11 @@ class Request(object):
 		self.__class__.session.mount("http", adapter)
 		return self.__class__.session
 
-	# @property
-	# def _webdriver
+	@property
+	def _webdriver_pool(self):
+		if not self.__class__.webdriver_pool:
+			self.__class__.webdriver_pool = WebDriverPool(**common.WEBDRIVER)
+		return self.__class__.webdriver_pool
 
 	def get_response(self):
 
@@ -116,18 +121,33 @@ class Request(object):
 		# TODO: 如果没有隧道代理, 则可以使用IP代理
 
 		# 浏览器渲染
+		use_session = self.use_session if self.use_session else common.USE_SESSION
+
 		if self.web_render:
+			try:
+				driver = self._webdriver_pool.get()
 
+				driver.get(self.url)
 
-			pass
+				if self.web_render_time:
+					tools.sleep_time(self.web_render_time)
+
+				html = driver.page_source
+				response = Response.from_dict({
+					"status_code": 200,
+					"_content": html,
+					"url": self.url
+				})
+				response.driver = driver
+			except Exception as e:
+				self._webdriver_pool.remove(driver)
 
 		# 设置session
-		use_session = self.use_session if self.use_session else common.USE_SESSION
-		if use_session:
+		elif use_session:
 			response = self._make_session.request(method=method, url=self.url, **self.request_kwargs)
+			response = Response(response)
 		else:
 			response = requests.request(method=method, url=self.url, **self.request_kwargs)
+			response = Response(response)
 
-		# TODO: 封装response
-		response = Response(response)
 		return response

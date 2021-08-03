@@ -41,6 +41,17 @@ class Response(res):
 			self._load_selector = Selector(self.text)
 		return self._load_selector
 
+	@classmethod
+	def from_dict(cls, response_dict):
+		"""
+			组装响应response
+		:return:
+		"""
+
+		response = res()
+		response.__dict__.update(response_dict)
+		return response
+
 	def bs4(self, parser="html.parser"):
 		"""
 			使用bs4进行响应内容的解析与提取

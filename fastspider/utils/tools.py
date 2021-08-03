@@ -1,5 +1,7 @@
 # encoding=utf-8
 
+import time
+
 from fastspider.settings import common
 
 
@@ -40,3 +42,23 @@ def get_tunnel_proxy():
 		return None
 	except Exception as e:
 		return None
+
+
+def sleep_time(times):
+	"""
+		休眠指定时间
+	:param times: 秒
+	"""
+	time.sleep(times)
+
+
+# 装饰器
+class Singleton(object):
+	def __init__(self, cls):
+		self._cls = cls
+		self._instance = {}
+
+	def __call__(self, *args, **kwargs):
+		if self._cls not in self._instance:
+			self._instance[self._cls] = self._cls(*args, **kwargs)
+		return self._instance[self._cls]
