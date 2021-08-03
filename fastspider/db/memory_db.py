@@ -8,8 +8,7 @@ CreateTime: 2020/07/29
 Desc: fastspider核心代码, 内存db
 """
 
-# TODO: 思考 为什么要用优先级队列, 而不用先进先出队列Queue
-from queue import PriorityQueue
+from queue import Queue
 
 
 class MemoryDB(object):
@@ -20,7 +19,7 @@ class MemoryDB(object):
 	"""
 
 	def __init__(self):
-		self.priority_queue = PriorityQueue()
+		self.priority_queue = Queue()
 
 	def put(self, task):
 		"""

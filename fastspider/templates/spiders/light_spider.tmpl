@@ -5,6 +5,8 @@ import fastspider
 
 class {{spider_class_name}}(fastspider.LightSpider):
 
+    start_urls = []
+
 	def start_requests(self):
 	    yield fastspider.Request("http://www.baidu.com")
 

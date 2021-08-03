@@ -57,8 +57,11 @@ class TestTmall(fastspider.LightSpider):
 		for url in self.start_urls:
 			params = urlencode(params)
 			new_url = url + params.replace("+", "%20")
-			yield fastspider.Request(url=new_url, headers=headers)
-			# yield fastspider.Request(url=self.url1, headers=headers)
+			# yield fastspider.Request(url=new_url, headers=headers)
+
+			# for i in ["http://pypi.douban.com", "http://pypi.douban.com"]:
+			for i in ["https://www.baidu.com", "https://www.baidu.com"]:
+				yield fastspider.Request(url=i, headers=headers)
 
 	def parse(self, request, response):
 		text = response.text

@@ -7,6 +7,7 @@ CreateTime: 2020/07/29
 
 Desc: fastspider核心爬虫AirSpider的基类代码
 """
+from fastspider.http.request.request import Request
 
 
 class LightBase(object):
@@ -16,7 +17,10 @@ class LightBase(object):
 			解析url地址
 		:return: 返回可迭代的yield Request()
 		"""
-		pass
+		if hasattr(self, "start_urls") and not self.start_urls:
+			raise Exception("Spider 必须定义 start_urls")
+		for url in self.start_urls:
+			yield Request(url=url)
 
 	def parse(self, request, response):
 		"""

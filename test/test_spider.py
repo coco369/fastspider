@@ -3,10 +3,12 @@
 import fastspider
 
 
-class TestSpider(fastspider.AirSpider):
+class TestSpider(fastspider.LightSpider):
+	start_urls = ["https://movie.douban.com/top250", "https://movie.douban.com/top250?start=25&filter=",
+	              "https://movie.douban.com/top250?start=50&filter="]
 
-	def start_requests(self):
-		yield fastspider.Request("https://movie.douban.com/top250", callback=self.parse)
+	# def start_requests(self):
+	# 	yield fastspider.Request("https://movie.douban.com/top250", callback=self.parse)
 
 	def parse(self, request, response):
 		print(response)
