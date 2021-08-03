@@ -3,7 +3,7 @@
 Auth: coco369
 Email: 779598160@qq.com
 
-CreateTime: 2020/07/30
+CreateTime: 2021/07/30
 
 Desc: fastspider核心代码, 封装requests包
 """
@@ -71,6 +71,9 @@ class Request(object):
 		self.__class__.session.mount("http", adapter)
 		return self.__class__.session
 
+	# @property
+	# def _webdriver
+
 	def get_response(self):
 
 		# 设置请求超时时间
@@ -113,7 +116,10 @@ class Request(object):
 		# TODO: 如果没有隧道代理, 则可以使用IP代理
 
 		# 浏览器渲染
-		# TODO: 暂不支持浏览器渲染
+		if self.web_render:
+
+
+			pass
 
 		# 设置session
 		use_session = self.use_session if self.use_session else common.USE_SESSION

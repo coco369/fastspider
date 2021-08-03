@@ -20,4 +20,4 @@ class TestSpider(fastspider.LightSpider):
 
 
 if __name__ == "__main__":
-	TestSpider().start()
+	TestSpider(3).start()
