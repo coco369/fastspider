@@ -9,7 +9,7 @@ Desc: fastspider核心爬虫AirSpider的基类代码
 """
 
 
-class AirBase(object):
+class LightBase(object):
 
 	def start_requests(self):
 		"""

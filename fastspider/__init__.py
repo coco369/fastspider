@@ -1,9 +1,7 @@
-from fastspider.core.spiders.air_spider import AirSpider
+from fastspider.core.spiders.light_spider import LightSpider
 from fastspider.http.request.request import Request
 
-# sys.path.insert(0, os.getcwd())
-
 __all__ = [
-	"AirSpider",
+	"LightSpider",
 	"Request"
 ]

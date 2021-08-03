@@ -1,10 +1,10 @@
 import json
-from urllib.parse import quote, urlencode
+from urllib.parse import urlencode
 
 import fastspider
 
 
-class TestTmall(fastspider.AirSpider):
+class TestTmall(fastspider.LightSpider):
 	"""
 		令牌过期, 需要替换params中data的 pvuuid 值和 sign 以及 headers中的cookies
 		获取聚划算分两个接口, params中的data也分两种情况

@@ -23,7 +23,7 @@ class CreateFastSpider(object):
 		:return: 返回爬虫类型对应的模板内容
 		"""
 		if spider_type == "air":
-			tmp_name = "air_spider.tmpl"
+			tmp_name = "light_spider.tmpl"
 		elif spider_type == "nomal":
 			tmp_name = "nomal_spider.tmpl"
 		elif spider_type == "cycle":

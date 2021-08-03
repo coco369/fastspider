@@ -9,14 +9,14 @@ Desc: fastspider核心代码, 轻量级爬虫air_spider
 """
 from threading import Thread
 
-from fastspider.core.base.air_base import AirBase
+from fastspider.core.base.light_base import LightBase
 from fastspider.core.controller.spider_controller import AirSpiderController
 from fastspider.db.memory_db import MemoryDB
 from fastspider.http.request.request import Request
 from fastspider.settings import common
 
 
-class AirSpider(AirBase, Thread):
+class LightSpider(LightBase, Thread):
 	# 定义私有变量
 	__common_settings__ = {}
 
@@ -25,7 +25,7 @@ class AirSpider(AirBase, Thread):
 			初始化配置
 			用户可自定义settings配置, 配置变量为__common_settings__, 类型为dict
 		"""
-		super(AirSpider, self).__init__()
+		super(LightSpider, self).__init__()
 
 		self._memory_db = MemoryDB()
 
