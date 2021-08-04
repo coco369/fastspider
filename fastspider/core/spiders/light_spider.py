@@ -9,6 +9,7 @@ Desc: fastspider核心代码, 轻量级爬虫air_spider
 """
 from threading import Thread
 
+from fastspider.cache.item_cache import ItemCache
 from fastspider.core.base.light_base import LightBase
 from fastspider.core.controller.spider_controller import AirSpiderController
 from fastspider.db.memory_db import MemoryDB
@@ -28,6 +29,7 @@ class LightSpider(LightBase, Thread):
 		super(LightSpider, self).__init__()
 
 		self._memory_db = MemoryDB()
+		self._item_cache = ItemCache(redis_key="light_spider")
 
 		self._parser_controller = []
 

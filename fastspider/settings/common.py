@@ -45,3 +45,9 @@ WEBDRIVER = dict(
 	timeout=30,  # 请求超时时间
 	window_size=(1024, 800),  # 窗口大小
 )
+
+# 数据入库的pipeline，可自定义，默认MysqlPipeline
+ITEM_PIPELINES = [
+    "feapder.pipelines.mysql_pipeline.MysqlPipeline",
+    # "feapder.pipelines.mongo_pipeline.MongoPipeline",
+]

@@ -13,6 +13,7 @@ import random
 from threading import Thread
 
 from fastspider.http.request.request import Request
+from fastspider.item.item import Item
 from fastspider.settings import common
 
 
@@ -99,6 +100,9 @@ class AirSpiderController(BaseController):
 								else:
 									# 异步, 将任务添加到 任务队列中
 									self._memory_db.put(result)
+							elif isinstance(result, Item):
+								# 存入item缓存中
+								pass
 
 					except Exception as e:
 						# TODO: 记录任务失败的信息
