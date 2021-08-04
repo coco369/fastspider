@@ -44,14 +44,21 @@ class TestTmall(fastspider.LightSpider):
 			"referer": "https://pages.tmall.com/",
 			"accept-language": "zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6",
 		}
+
+		cookies = {
+			'''
+				cookie: t=23ba92232b7677dafdee2a748abbfc0f
+				cookie: _tb_token_=3b137e1d71e5
+				cookie: cookie2=1d6df488e8e33b5cc0894267b95caddc
+				cookie: _m_h5_tk=eeb0bb31c0fcc77ee445367c0186231a_1627881573316
+				cookie: _m_h5_tk_enc=9eebae74dab94fbd9d168446d10b335e
+			'''
+		}
 		for url in self.start_urls:
 			params = urlencode(params)
 			new_url = url + params.replace("+", "%20")
-			# yield fastspider.Request(url=new_url, headers=headers)
-
-			# for i in ["http://pypi.douban.com", "http://pypi.douban.com"]:
-			for i in ["https://www.baidu.com", "https://www.baidu.com"]:
-				yield fastspider.Request(url=i, headers=headers)
+			yield fastspider.Request(url=new_url, headers=headers)
+			# yield fastspider.Request(url=self.url1, headers=headers)
 
 	def parse(self, request, response):
 		text = response.text

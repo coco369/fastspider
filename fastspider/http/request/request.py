@@ -28,7 +28,7 @@ class Request(object):
 	session = None
 
 	# 组装非必须传入的参数
-	__request_attrs__ = ["headers", "data", "params", "cookies", "json", "timeout", "proxies", "verify"]
+	__request_attrs__ = ["headers", "data", "params", "cookies", "json", "timeout", "proxies", "verify", "meta"]
 	# 组装默认传递的参数
 	__default_requests_attrs__ = {
 		"url": "",
@@ -83,6 +83,8 @@ class Request(object):
 		return self.__class__.webdriver_pool
 
 	def get_response(self):
+		# 获取meta参数
+		meta = self.request_kwargs.pop("meta") if self.request_kwargs.get("meta") else ""
 
 		# 设置请求超时时间
 		self.request_kwargs.setdefault(
@@ -115,11 +117,12 @@ class Request(object):
 
 		# 代理proxies
 		proxies = self.request_kwargs.get("proxies", False)
-		if proxies and common.PROXY_ENABLE:
-			# 代理的获取方式, 依次获取隧道代理、IP地址代理.....
-			abuyun_proxies = tools.get_tunnel_proxy()
-			if abuyun_proxies:
-				self.request_kwargs.update(proxies=abuyun_proxies)
+		# if proxies and common.PROXY_ENABLE:
+		# 	# 代理的获取方式, 依次获取隧道代理、IP地址代理.....
+		# 	abuyun_proxies = tools.get_tunnel_proxy()
+		# 	if abuyun_proxies:
+		# 		self.request_kwargs.update(proxies=abuyun_proxies)
+		self.request_kwargs.update(proxies=proxies)
 
 		# TODO: 如果没有隧道代理, 则可以使用IP代理
 
@@ -148,7 +151,8 @@ class Request(object):
 					"status_code": 200,
 					"_content": html,
 					"url": self.url,
-					"cookies": driver.cookies
+					"cookies": driver.cookies,
+					"meta": meta
 				})
 				response.driver = driver
 			except Exception as e:
@@ -159,9 +163,11 @@ class Request(object):
 		# 设置session
 		elif use_session:
 			response = self._make_session.request(method=method, url=self.url, **self.request_kwargs)
+			response.__dict__.setdefault("meta", meta)
 			response = Response(response)
 		else:
 			response = requests.request(method=method, url=self.url, **self.request_kwargs)
+			response.__dict__.setdefault("meta", meta)
 			response = Response(response)
 
 		return response
