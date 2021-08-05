@@ -10,27 +10,24 @@ Desc: fastspider核心代码, 封装webdriver
 import threading
 from queue import Queue
 
+from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 from fastspider.http import user_agent
 from fastspider.settings import common
 
-from selenium import webdriver
-
 from fastspider.utils.tools import Singleton
 
 
-class WebDriver(WebDriver):
+class FastWebDriver(WebDriver):
 	# TODO: 2021/08/03 目前暂时只支持Chrome
 	CHROME = "Chrome"
 
-	def __init__(self, driver_type=CHROME, load_images=True, user_agent=None, proxies=None, timeout=30,
+	def __init__(self, driver_type=CHROME, not_load_images=True, user_agent=None, proxies=None, timeout=30,
 	             windows_size=(1024, 800), executable_path=None, headless=None, **kwargs):
-		
-		super(WebDriver, self).__init__()
 
 		self._driver_type = driver_type
-		self._load_images = load_images
+		self.not_load_images = not_load_images
 		self._user_agent = user_agent
 		self._proxies = proxies
 		self._timeout = timeout
@@ -38,8 +35,13 @@ class WebDriver(WebDriver):
 		self._executable_path = executable_path
 		self._headless = headless
 
-		if self._driver_type == WebDriver.CHROME:
+		if self._driver_type == FastWebDriver.CHROME:
 			self.driver = self.chrome_driver()
+
+		# 当网络差get(url)不返回,但也不报错, 设置超时选项来解决程序卡住的问题。
+		self.driver.set_page_load_timeout(self._timeout)
+		# 设置10秒脚本超时时间
+		self.driver.set_script_timeout(self._timeout)
 
 	def chrome_driver(self):
 		"""
@@ -51,8 +53,8 @@ class WebDriver(WebDriver):
 		options.add_experimental_option("useAutomationExtension", False)
 
 		# 加载图片设置
-		if self._load_images:
-			prefs = {"profile.default_content_settings.images": 2}
+		if self.not_load_images:
+			prefs = {"profile.managed_default_content_settings.images": 2}
 			options.add_experimental_option("prefs", prefs)
 
 		# user-agent设置
@@ -76,9 +78,9 @@ class WebDriver(WebDriver):
 
 		# 是否指定webdriver.exe的路径设置
 		if self._executable_path:
-			driver = webdriver.Chrome(chrome_options=options, executable_path=self._executable_path)
+			driver = webdriver.Chrome(options=options, executable_path=self._executable_path)
 		else:
-			driver = webdriver.Chrome(chrome_options=options)
+			driver = webdriver.Chrome(options=options)
 		# execute_cdp_cmd 通过调用DevTools来调试
 		# 模拟浏览器访问被识别, 应对方案如下
 		driver.execute_cdp_cmd(
@@ -100,9 +102,21 @@ class WebDriver(WebDriver):
 			new_cookies[cookie["name"]] = cookie["value"]
 		return new_cookies
 
+	def __getattr__(self, name):
+		"""
+			WebDriver启动后, 会生成相应的控制浏览器会话的session_id等参数。
+			其父类WebDriver需要使用到session_id等属性, 因此通过当前浏览器对象this.driver将相关session_id等属性获取到, 并作为属性的value值返回
+		:param name: 参数
+		:return: 返回当前浏览器对象driver的相关属性
+		"""
+		if self.driver:
+			return getattr(self.driver, name)
+		else:
+			raise AttributeError
+
 
 @Singleton
-class WebDriverPool(object):
+class WebDriverPool:
 	"""
 		webdriver池
 	"""
@@ -122,7 +136,7 @@ class WebDriverPool(object):
 		# TODO: queue中为什么需要5个driver对象
 		while self.queue_count <= self.queue.maxsize:
 			with self.thread_lock:
-				driver = WebDriver(**self.kwargs)
+				driver = FastWebDriver(**self.kwargs)
 				self.queue.put(driver)
 				self.queue_count += 1
 

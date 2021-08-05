@@ -158,6 +158,7 @@ class Request(object):
 				})
 				response.driver = driver
 			except Exception as e:
+				print(e)
 				raise e
 			finally:
 				self._webdriver_pool.remove(driver)
