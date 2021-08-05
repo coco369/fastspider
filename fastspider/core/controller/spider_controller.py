@@ -44,10 +44,11 @@ class BaseController(Thread):
 
 class AirSpiderController(BaseController):
 
-	def __init__(self, memory_db):
+	def __init__(self, memory_db, item_cache):
 		super(AirSpiderController, self).__init__()
 
 		self._memory_db = memory_db
+		self._item_cache = item_cache
 
 	def run(self):
 
@@ -102,7 +103,7 @@ class AirSpiderController(BaseController):
 									self._memory_db.put(result)
 							elif isinstance(result, Item):
 								# 存入item缓存中
-								pass
+								self._item_cache.put(result)
 
 					except Exception as e:
 						# TODO: 记录任务失败的信息

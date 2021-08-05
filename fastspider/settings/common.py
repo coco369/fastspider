@@ -46,8 +46,10 @@ WEBDRIVER = dict(
 	window_size=(1024, 800),  # 窗口大小
 )
 
-# 数据入库的pipeline，可自定义，默认MysqlPipeline
+# 数据入库的pipeline，可自定义，默认RedisPipeline
 ITEM_PIPELINES = [
-    "feapder.pipelines.mysql_pipeline.MysqlPipeline",
-    # "feapder.pipelines.mongo_pipeline.MongoPipeline",
+	"fastspider.pipeline.redis_pipeline.RedisPipeline",
+	# "fastspider.pipeline.mysql_pipeline.MysqlPipeline",
+	# "fastspider.pipeline.mongo_pipeline.MongoPipeline",
 ]
+

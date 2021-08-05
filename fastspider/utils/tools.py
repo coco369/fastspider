@@ -26,6 +26,9 @@ def check_class_method(obj, name):
 
 
 def get_tunnel_proxy():
+	"""
+		隧道代理
+	"""
 	try:
 		if common.PROXY_ENABLE:
 			proxy_meta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
@@ -64,8 +67,25 @@ class Singleton(object):
 
 
 def cookies2dict(cookies):
+	"""
+		将request中的cookies解析为字典
+	"""
 	cookie_dict = {}
 	for i in cookies.split(";"):
 		cookie = i.split("=")
 		cookie_dict[cookie[0]] = cookie[1]
 	return cookie_dict
+
+
+def pascal_case_to_snake_case(name):
+	"""
+		将驼峰命名改为单词下划线命名
+	:param name: 驼峰命名变量
+	:return: 单词下划线命名变量
+	"""
+	snake_name = []
+	for index, char in enumerate(name):
+		if index != 0 and char.isupper():
+			snake_name.append("_")
+		snake_name.append(char)
+	return "".join(snake_name).lower()

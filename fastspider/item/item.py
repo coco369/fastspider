@@ -48,7 +48,7 @@ class Item(metaclass=BaseItemMetaClass):
 	@property
 	def to_dict(self):
 		item_property = {}
-		for key, values in self.__class__.__dict__.items():
+		for key, values in self.__dict__.items():
 			if key not in ("__name__", "__table_name__", "__update_key__", "__unique_key__"):
 				item_property[key] = values
 		return item_property

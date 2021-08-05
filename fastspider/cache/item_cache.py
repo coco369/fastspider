@@ -12,6 +12,7 @@ from queue import Queue
 from threading import Thread
 
 from fastspider.item.item import Item
+from fastspider.pipeline.base_pipeline import BasePipeline
 from fastspider.utils import tools
 from fastspider.settings import common
 
@@ -24,6 +25,7 @@ class ItemCache(Thread):
 		super(ItemCache, self).__init__()
 
 		self._thread_stop = False
+		self._is_doing = False
 
 		self._item_queue = Queue(maxsize=self.__class__.MAX_ITEM_COUNT)
 
@@ -57,7 +59,6 @@ class ItemCache(Thread):
 				self.__add_item_to_db(items)
 
 				count, items = 0, []
-
 		if items:
 			self.__add_item_to_db(items)
 
@@ -69,6 +70,8 @@ class ItemCache(Thread):
 		while items:
 			item = items.pop(0)
 			item_name = item.item_name
+			# 将table_name修改为小写命名规范，如DoubanItem 修改为douban_item
+			item_name = tools.pascal_case_to_snake_case(item_name)
 
 			if self._item_table.get(item_name):
 				table_item = self._item_table.get(item_name)
@@ -82,7 +85,7 @@ class ItemCache(Thread):
 			if table_item not in item_dict:
 				item_dict[table_item] = []
 			# 将不同Item对象的数据保存到item_dict字典中.格式为{item对应的redis key值: [item字典, item字典].....}
-			item_dict[table_item].append(items.to_dict)
+			item_dict[table_item].append(item.to_dict)
 		return item_dict
 
 	def load_pipelines(self):
@@ -95,32 +98,68 @@ class ItemCache(Thread):
 			module, class_name = pipeline.rsplit(".", 1)
 			pipeline_cls = importlib.import_module(module).__getattribute__(class_name)
 
-			if not isinstance(pipeline_cls(), "BasePipeline"):
+			if not isinstance(pipeline_cls(), BasePipeline):
 				raise Exception(f"{class_name}必须继承 BasePipeline ")
 
 			pipelines.append(pipeline_cls())
 		return pipelines
 
-	def __save_item_to_db(self, table_name, item_data):
+	def __save_item_to_db(self, table_name, item_data, is_update=False):
 		"""
 			保存数据
 		:param table_name: redis key名称
 		:param item_data: 存储的数据
+		:param is_update: True为更新数据  False为插入数据
 		:return:
 		"""
-		pass
+
+		for pipeline in self._pipelines:
+			if is_update:
+				# TODO: 更新数据
+				pass
+			else:
+				if not pipeline.save_items(table_name, item_data):
+					print("插入数据失败")
 
 	def __add_item_to_db(self, items):
 		"""
 			处理item对象
 		"""
+		self._is_doing = True
 		# 处理item对象的信息, 返回redis队列和序列化item信息
 		items_dict = self.__pick_items(items)
 		if items_dict:
 			table_name, item_data = items_dict.popitem()
 			self.__save_item_to_db(table_name, item_data)
 
+		# 是否正在执行存储操作
+		self._is_doing = False
+
+	def put(self, item):
+		"""
+			将item对象存在队列中
+		:param item: Item对象
+		"""
+		self._item_queue.put(item)
+
 	def run(self):
 		while not self._thread_stop:
 			self.flush()
 			tools.sleep_time(0.5)
+
+	def stop(self):
+		self._thread_stop = True
+
+	def is_empty(self):
+		"""
+			判断item队列是否为空
+		:return: 返回True 为空, 返回False 不为空
+		"""
+		return self._item_queue.empty()
+
+	def adding_item_to_db(self):
+		"""
+			判断item是否正在存储数据库中
+		:return:
+		"""
+		return self._is_doing
