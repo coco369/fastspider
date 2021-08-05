@@ -48,7 +48,8 @@ WEBDRIVER = dict(
 
 # 数据入库的pipeline，可自定义，默认RedisPipeline
 ITEM_PIPELINES = [
-	"fastspider.pipeline.redis_pipeline.RedisPipeline",
+	# "fastspider.pipeline.test.TmallCheapPipeline"
+	# "fastspider.pipeline.redis_pipeline.RedisPipeline",
 	# "fastspider.pipeline.mysql_pipeline.MysqlPipeline",
 	# "fastspider.pipeline.mongo_pipeline.MongoPipeline",
 ]

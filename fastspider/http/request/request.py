@@ -20,6 +20,8 @@ from fastspider.utils import tools
 # 忽略警告信息
 urllib3.disable_warnings()
 
+urllib3.util.ssl_.DEFAULT_CIPHERS += ':RC4-SHA'
+
 
 class Request(object):
 	user_agent_pool = user_agent
@@ -169,5 +171,4 @@ class Request(object):
 			response = requests.request(method=method, url=self.url, **self.request_kwargs)
 			response.__dict__.setdefault("meta", meta)
 			response = Response(response)
-
 		return response
