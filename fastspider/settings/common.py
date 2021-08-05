@@ -53,3 +53,8 @@ ITEM_PIPELINES = [
 	# "fastspider.pipeline.mongo_pipeline.MongoPipeline",
 ]
 
+# 导入自定义settings的配置文件
+try:
+	from settings import *
+except Exception as e:
+	pass
