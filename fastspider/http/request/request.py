@@ -35,6 +35,7 @@ class Request(object):
 	__default_requests_attrs__ = {
 		"url": "",
 		"retry_time": 0,
+		"priority": 300,
 		"parser_name": None,
 		"callback": None,
 		"use_session": False,
@@ -45,11 +46,12 @@ class Request(object):
 		"request_sync": False
 	}
 
-	def __init__(self, url="", retry_time=0, parser_name=None, callback=None, use_session=False,
+	def __init__(self, url="", retry_time=0, priority=300, parser_name=None, callback=None, use_session=False,
 	             download_middleware=None, web_render=False, web_render_time=0, web_render_scroll=False,
 	             request_sync=False, **kwargs):
 		self.url = url
 		self.retry_time = retry_time
+		self.priority = priority
 		self.parser_name = parser_name
 		self.callback = callback
 		self.request_sync = request_sync
@@ -65,6 +67,15 @@ class Request(object):
 				self.request_kwargs[key] = value
 
 			self.__dict__[key] = value
+
+	def __lt__(self, other):
+		"""
+			把Request对象插入到优先级对象中, 会判断每一个Reqeest对象的优先级。
+			需要重定义__lt__方法, 使类能进行大小比较, 然后将具有优先级的Request对象插入到优先级队列中
+		:param other:
+		:return:
+		"""
+		return self.priority < other.priority
 
 	@property
 	def _make_session(self):

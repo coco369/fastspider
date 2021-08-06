@@ -108,9 +108,10 @@ class AirSpiderController(BaseController):
 					except Exception as e:
 						# TODO: 记录任务失败的信息
 						print(e)
-						if request.retry_time:
-							request.retry_time -= 1
-							self._memory_db.put(request)
+						self._memory_db.put(request)
+						# if request.retry_time:
+						# 	request.retry_time -= 1
+						# 	self._memory_db.put(request)
 					# finally:
 					# 	print("释放相关的链接, 如数据库、浏览器的链接")
 

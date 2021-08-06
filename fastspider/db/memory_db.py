@@ -8,7 +8,7 @@ CreateTime: 2021/07/29
 Desc: fastspider核心代码, 内存db
 """
 
-from queue import Queue
+from queue import PriorityQueue
 
 
 class MemoryDB(object):
@@ -19,7 +19,7 @@ class MemoryDB(object):
 	"""
 
 	def __init__(self):
-		self.priority_queue = Queue()
+		self.priority_queue = PriorityQueue()
 
 	def put(self, task):
 		"""

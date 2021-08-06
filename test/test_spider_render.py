@@ -66,7 +66,7 @@ class TestSpider(fastspider.LightSpider):
 	def parse_detail_html(self, request, response):
 		meta = response.meta
 		src = response.xpath('//*[@id="J_UlThumb"]/li[1]/a/img/@src').get()
-		print(src, meta["title"], meta["price"], meta["msg"], meta["href"])
+		print('-----------------', src, meta["title"], meta["price"], meta["msg"], meta["href"])
 		item = TmallCheapItem(src=src, title=meta["title"], price=meta["price"], msg=meta["msg"], href=meta["href"])
 		yield item
 
