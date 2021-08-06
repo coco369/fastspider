@@ -113,9 +113,10 @@ class Request(object):
 
 		# 获取请求方式method
 		method = "GET"
-		if not self.__dict__.get("method"):
-			if "data" in self.request_kwargs:
-				method = "POST"
+		if self.__dict__.get("method"):
+			method = self.__dict__.get("method")
+		elif "data" in self.request_kwargs:
+			method = "POST"
 
 		# 设置ua
 		headers = self.request_kwargs.get("headers", {})
