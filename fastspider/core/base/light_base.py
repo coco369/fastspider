@@ -22,7 +22,7 @@ class LightBase(object):
 		for url in self.start_urls:
 			yield Request(url=url)
 
-	def parse(self, request, response):
+	def parser(self, request, response):
 		"""
 			默认的解析函数, 解析响应response的内容
 		:param request: 请求对象

@@ -5,12 +5,13 @@ import fastspider
 
 class {{spider_class_name}}(fastspider.LightSpider):
 
-    start_urls = []
+    start_urls = ["http://www.baidu.com"]
 
 	def start_requests(self):
-	    yield fastspider.Request("http://www.baidu.com")
+	    for url in self.start_urls:
+	        yield fastspider.Request(url)
 
-	def parse(self, request, response):
+	def parser(self, request, response):
 	    print(response.text)
 
 

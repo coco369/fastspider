@@ -87,7 +87,7 @@ class AirSpiderController(BaseController):
 							callback_parser = (request.callback)
 							results = callback_parser(request, response)
 						else:
-							results = parser.parse(request, response)
+							results = parser.parser(request, response)
 
 						if results and not isinstance(results, Iterable):
 							raise Exception(f"{parser.name}.{request.callback}必须可迭代的返回值")

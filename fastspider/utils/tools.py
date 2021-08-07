@@ -89,3 +89,11 @@ def pascal_case_to_snake_case(name):
 			snake_name.append("_")
 		snake_name.append(char)
 	return "".join(snake_name).lower()
+
+
+def time_to_timestamp(strtime):
+	"""
+		将字符串时间转换为时间戳
+	"""
+	timeArray = time.strptime(strtime, "%Y-%m-%d %H:%M")
+	return int(time.mktime(timeArray))
