@@ -22,14 +22,14 @@ class CreateFastSpider(object):
 		:param spider_type: 爬虫类型
 		:return: 返回爬虫类型对应的模板内容
 		"""
-		if spider_type == "air":
+		if spider_type == "light":
 			tmp_name = "light_spider.tmpl"
 		elif spider_type == "nomal":
 			tmp_name = "nomal_spider.tmpl"
 		elif spider_type == "cycle":
 			tmp_name = "cycle_spider.tmpl"
 		else:
-			raise Exception('spider_type error, must choice "air" "nomal" "cycle" ')
+			raise Exception('spider_type error, must choice "light" "nomal" "cycle" ')
 
 		with open(os.path.join(os.path.join(
 				os.path.join(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "templates"),
