@@ -11,7 +11,7 @@ from threading import Thread
 
 from fastspider.cache.item_cache import ItemCache
 from fastspider.core.base.light_base import LightBase
-from fastspider.core.controller.spider_controller import AirSpiderController
+from fastspider.core.controller.spider_controller import LightSpiderController
 from fastspider.db.memory_db import MemoryDB
 from fastspider.http.request.request import Request
 from fastspider.settings import common
@@ -76,7 +76,7 @@ class LightSpider(LightBase, Thread):
 		"""
 		# 先将任务监听的控制方法启动, 再通过add_task将需要爬取的request对象写入, 通过while检测任务执行的情况, 任务执行完, 则暂定任务_thread_stop设置为True
 		for i in range(self._thread_count):
-			spider_controller = AirSpiderController(self._memory_db, self._item_cache)
+			spider_controller = LightSpiderController(self._memory_db, self._item_cache)
 			# 将当前执行的爬虫实例对象添加到线程中
 			spider_controller.add_parser(self)
 			spider_controller.start()

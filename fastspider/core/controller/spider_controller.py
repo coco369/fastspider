@@ -42,10 +42,10 @@ class BaseController(Thread):
 		self._parser.append(parser)
 
 
-class AirSpiderController(BaseController):
+class LightSpiderController(BaseController):
 
 	def __init__(self, memory_db, item_cache):
-		super(AirSpiderController, self).__init__()
+		super(LightSpiderController, self).__init__()
 
 		self._memory_db = memory_db
 		self._item_cache = item_cache
