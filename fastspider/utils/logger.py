@@ -62,7 +62,8 @@ def getlogger(name=None, path=None, log_level=None, write_to_file=None, write_to
 		)
 		rotating_handler.setFormatter(formatter)
 		logger.addHandler(rotating_handler)
-	elif write_to_console:
+
+	if write_to_console:
 		# 打印到控制台
 		loguru_handler = LoggerHandler()
 		loguru_handler.setFormatter(formatter)
