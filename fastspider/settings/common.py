@@ -57,16 +57,16 @@ ITEM_PIPELINES = [
 ]
 
 # 日志配置
-LOG_IS_WRITE_TO_CONSOLE = True  # 是否打印到控制台
-
-LOG_NAME = os.path.basename(os.getcwd())
-LOG_PATH = "log/%s.log" % LOG_NAME  # log存储路径
-LOG_LEVEL = "DEBUG"
-LOG_IS_WRITE_TO_FILE = False  # 是否保存到文件中
-LOG_MAX_BYTES = 10 * 1024 * 1024  # 每个日志文件的最大字节数
-LOG_FILE_MAX_NUMBER = 10  # 最大备份文件个数
-
-LOG_ENCODING = "utf8"  # 日志文件编码
+LOGGER = dict(
+	# LOG_IS_WRITE_TO_CONSOLE=True,  # 是否打印到控制台
+	# LOG_NAME=os.path.basename(os.getcwd()),
+	# LOG_PATH="log/%s.log",  # log存储路径
+	# LOG_LEVEL="DEBUG",
+	# LOG_IS_WRITE_TO_FILE=False,  # 是否保存到文件中
+	# LOG_MAX_BYTES=10 * 1024 * 1024,  # 每个日志文件的最大字节数
+	# LOG_FILE_MAX_NUMBER=10,  # 最大备份文件个数
+	# LOG_ENCODING="utf8",  # 日志文件编码
+)
 
 # 导入自定义settings的配置文件
 try:
