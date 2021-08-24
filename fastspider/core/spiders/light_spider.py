@@ -15,6 +15,7 @@ from fastspider.core.controller.spider_controller import LightSpiderController
 from fastspider.db.memory_db import MemoryDB
 from fastspider.http.request.request import Request
 from fastspider.settings import common
+from fastspider.utils.logger import log
 
 
 class LightSpider(LightBase, Thread):
@@ -99,5 +100,5 @@ class LightSpider(LightBase, Thread):
 				# 暂停解析item任务线程
 				self._item_cache.stop()
 
-				print("无任务, 爬虫执行完毕")
+				log.info("无任务, 爬虫执行完毕")
 				break

@@ -18,7 +18,7 @@ class TestTmall(fastspider.LightSpider):
 			"jsv": "2.6.1",
 			"appKey": "12574478",
 			"t": "1627898871097",
-			"sign": "3e2fd70745b86fa410010deea9c4f937",
+			"sign": "604157d1118d7cca105893fc274a5ae0",
 			"api": "mtop.tmall.kangaroo.core.service.route.PageRecommendService",
 			"v": "1.0",
 			"param": """[object Object]""",
@@ -45,22 +45,14 @@ class TestTmall(fastspider.LightSpider):
 			"accept-language": "zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6",
 		}
 
-		cookies = {
-			'''
-				cookie: t=23ba92232b7677dafdee2a748abbfc0f
-				cookie: _tb_token_=3b137e1d71e5
-				cookie: cookie2=1d6df488e8e33b5cc0894267b95caddc
-				cookie: _m_h5_tk=eeb0bb31c0fcc77ee445367c0186231a_1627881573316
-				cookie: _m_h5_tk_enc=9eebae74dab94fbd9d168446d10b335e
-			'''
-		}
 		for url in self.start_urls:
 			params = urlencode(params)
 			new_url = url + params.replace("+", "%20")
+			print(new_url)
 			yield fastspider.Request(url=new_url, headers=headers)
 			# yield fastspider.Request(url=self.url1, headers=headers)
 
-	def parse(self, request, response):
+	def parser(self, request, response):
 		text = response.text
 		print(text)
 		result = json.loads(text[20:-1])

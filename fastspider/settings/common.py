@@ -9,6 +9,8 @@ Desc: 配置文件
 """
 
 # 爬虫配置
+import os
+
 SPIDER_THREAD_COUNT = 1  # 爬虫并发数
 
 # request网络请求超时时间
@@ -40,7 +42,7 @@ WEBDRIVER = dict(
 	not_load_images=True,  # 是否加载图片
 	user_agent=None,  # 字符串 或 无参函数，返回值为user_agent
 	proxies=None,  # xxx.xxx.xxx.xxx:xxxx 或 无参函数，返回值为代理地址
-	headless=True,  # 是否为无头浏览器
+	headless=False,  # 是否为无头浏览器
 	driver_type="Chrome",  # CHROME、PHANTOMJS、FIREFOX
 	timeout=30,  # 请求超时时间
 	window_size=(1024, 800),  # 窗口大小
@@ -53,6 +55,18 @@ ITEM_PIPELINES = [
 	# "fastspider.pipeline.mysql_pipeline.MysqlPipeline",
 	# "fastspider.pipeline.mongo_pipeline.MongoPipeline",
 ]
+
+# 日志配置
+LOG_IS_WRITE_TO_CONSOLE = True  # 是否打印到控制台
+
+LOG_NAME = os.path.basename(os.getcwd())
+LOG_PATH = "log/%s.log" % LOG_NAME  # log存储路径
+LOG_LEVEL = "DEBUG"
+LOG_IS_WRITE_TO_FILE = False  # 是否保存到文件中
+LOG_MAX_BYTES = 10 * 1024 * 1024  # 每个日志文件的最大字节数
+LOG_FILE_MAX_NUMBER = 10  # 最大备份文件个数
+
+LOG_ENCODING = "utf8"  # 日志文件编码
 
 # 导入自定义settings的配置文件
 try:

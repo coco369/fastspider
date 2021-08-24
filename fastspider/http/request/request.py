@@ -18,6 +18,8 @@ from fastspider.settings import common
 from fastspider.utils import tools
 
 # 忽略警告信息
+from fastspider.utils.logger import log
+
 urllib3.disable_warnings()
 
 urllib3.util.ssl_.DEFAULT_CIPHERS += ':RC4-SHA'
@@ -117,7 +119,6 @@ class Request(object):
 			method = self.__dict__.get("method")
 		elif "data" in self.request_kwargs:
 			method = "POST"
-
 		# 设置ua
 		headers = self.request_kwargs.get("headers", {})
 		if "user-agent" not in headers and "User-Agent" not in headers:
@@ -141,6 +142,8 @@ class Request(object):
 		self.request_kwargs.update(proxies=proxies)
 
 		# TODO: 如果没有隧道代理, 则可以使用IP代理
+
+
 
 		# 浏览器渲染
 		use_session = self.use_session if self.use_session else common.USE_SESSION
@@ -186,4 +189,24 @@ class Request(object):
 			response = requests.request(method=method, url=self.url, **self.request_kwargs)
 			response.__dict__.setdefault("meta", meta)
 			response = Response(response)
+
+		log.debug(
+			"""
+			------------------%s.%s request for-----------------------------
+				url = %s
+				method = %s
+				request_kwargs = %s
+				
+				response.status = %s
+				response.content = %s
+			""" % (
+				self.parser_name,
+				self.callback,
+				self.url,
+				method,
+				self.request_kwargs,
+				response.status_code,
+				response.content,
+			)
+		)
 		return response
