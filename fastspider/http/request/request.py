@@ -196,17 +196,12 @@ class Request(object):
 				url = %s
 				method = %s
 				request_kwargs = %s
-				
-				response.status = %s
-				response.content = %s
 			""" % (
 				self.parser_name,
 				self.callback,
 				self.url,
 				method,
 				self.request_kwargs,
-				response.status_code,
-				response.content,
 			)
 		)
 		return response
