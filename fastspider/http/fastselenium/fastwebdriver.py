@@ -52,6 +52,9 @@ class FastWebDriver(WebDriver):
 		options.add_experimental_option("excludeSwitches", ["enable-automation"])
 		options.add_experimental_option("useAutomationExtension", False)
 
+		options.add_argument("--no-sandbox")
+		options.add_argument("--disable-dev-shm-usage")
+
 		# 加载图片设置
 		if self.not_load_images:
 			prefs = {"profile.managed_default_content_settings.images": 2}
