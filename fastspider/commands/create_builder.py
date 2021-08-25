@@ -49,21 +49,42 @@ def crawl():
 		"--spider",
 		nargs="+",
 		help="运行爬虫\n"
-			 "如 fastspider crawl -s <spider_path> -c <thread_count>"
-			 "spider_path           表示启动的爬虫的路径"
-			 "thread_count          表示启动的爬虫线程个数",
+		     "如 fastspider crawl -s <spider_path> -c <thread_count>"
+		     "spider_path           表示启动的爬虫的路径"
+		     "thread_count          表示启动的爬虫线程个数",
+		metavar=""
+	)
+	parser.add_argument(
+		"-c",
+		"--thread_count",
+		nargs="+",
+		help="爬虫的线程个数\n"
+		     "如 fastspider crawl -s <spider_path> -c <thread_count>"
+		     "spider_path           表示启动的爬虫的路径"
+		     "thread_count          表示启动的爬虫线程个数",
 		metavar=""
 	)
 
 	args = parser.parse_args()
 	if args.spider:
 		spider_path, *spider_params = args.spider
-		if not len(spider_params):
-			thread_count = 1
-		elif len(spider_params) == 2 and spider_params[0] == "-c":
-			thread_count = spider_params[1]
-		else:
-			raise Exception("spider crawl error, command example fastspider crawl -s <spider_name> -c <thread_count> / fastspider crawl -s <spider_name>")
+		if len(spider_params):
+			raise Exception(
+				"spider crawl error, command example fastspider crawl -s <spider_name> -c <thread_count> / fastspider crawl -s <spider_name>")
+
+		thread_count, *spider_params = args.thread_count
+
+		if isinstance(thread_count, str):
+			try:
+				thread_count = int(thread_count)
+			except Exception as e:
+				raise Exception("spider thread_count must int type")
+			if thread_count > 20:
+				raise Exception("spider thread_count must lt 20")
+
+		if len(spider_params):
+			raise Exception(
+				"spider crawl error, command example fastspider crawl -s <spider_name> -c <thread_count> / fastspider crawl -s <spider_name>")
 
 		# 启动爬虫
 		RunFastSpider().run(spider_path, thread_count)
