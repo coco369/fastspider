@@ -9,9 +9,6 @@ Desc: 配置文件
 """
 
 # 爬虫配置
-import os
-
-BASE_PATH = os.path.dirname(os.path.dirname(__file__))
 
 SPIDER_THREAD_COUNT = 1  # 爬虫并发数
 

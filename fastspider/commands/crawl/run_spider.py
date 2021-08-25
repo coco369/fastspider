@@ -7,12 +7,7 @@ CreateTime: 2021/08/25
 
 Desc: 解析启动爬虫命令行参数, 并启动对应的爬虫
 """
-import sys
 import importlib
-
-from fastspider.settings import common
-
-sys.path.append(common.BASE_PATH)
 
 
 class RunFastSpider(object):
