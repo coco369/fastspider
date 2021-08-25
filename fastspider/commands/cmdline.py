@@ -25,6 +25,9 @@ def _print_command_desc():
 	print(f"  startproject        create project")
 	print(f"  startspider         create spider \n")
 
+	print(f"Run spider commands")
+	print(f"  crawl               run spider")
+
 	print(f'Use "fastspider <command> -h to see more info about a command')
 
 
@@ -43,6 +46,8 @@ def execute():
 		pass
 	elif command == "startspider":
 		create_builder.create()
+	elif command == "crawl":
+		create_builder.crawl()
 	else:
 		_print_command_desc()
 
