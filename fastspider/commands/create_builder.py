@@ -49,14 +49,15 @@ def crawl():
 		"--spider",
 		nargs="+",
 		help="运行爬虫\n"
-			 "如 fastspider crawl -s <spider_class_name> -c <thread_count>"
-			 "spider_class_name     表示启动的爬虫的类名称"
+			 "如 fastspider crawl -s <spider_path> -c <thread_count>"
+			 "spider_path           表示启动的爬虫的路径"
 			 "thread_count          表示启动的爬虫线程个数",
 		metavar=""
 	)
+
 	args = parser.parse_args()
 	if args.spider:
-		spider_class_name, *spider_params = args.spider
+		spider_path, *spider_params = args.spider
 		if not len(spider_params):
 			thread_count = 1
 		elif len(spider_params) == 2 and spider_params[0] == "-c":
@@ -65,4 +66,4 @@ def crawl():
 			raise Exception("spider crawl error, command example fastspider crawl -s <spider_name> -c <thread_count> / fastspider crawl -s <spider_name>")
 
 		# 启动爬虫
-		RunFastSpider().run(spider_class_name, thread_count)
+		RunFastSpider().run(spider_path, thread_count)
