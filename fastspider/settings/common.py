@@ -74,6 +74,8 @@ REDISDB_PORT = 6379
 REDISDB_USER_PASS = ""
 # 默认 0 到 15 共16个数据库
 REDISDB_DB = 1
+# 心跳检测的数据缓存的时间，以秒为单位
+REDISDB_TIME = 5
 
 # 导入自定义settings的配置文件
 try:

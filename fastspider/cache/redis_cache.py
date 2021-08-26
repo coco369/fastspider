@@ -9,6 +9,7 @@ Desc: fastspider核心代码, redis缓存
 """
 from threading import Thread
 
+from fastspider.settings import common
 from fastspider.utils.logger import log
 
 from fastspider.db.redis_db import RedisDB
@@ -23,6 +24,7 @@ class RedisCache(Thread):
 		self._thread_stop = False
 		self._redis = RedisDB()
 		self._parser_name = parser_name
+		self._redis_time = common.REDISDB_TIME
 
 	def heartbeat(self, parser_name):
 		"""
@@ -30,7 +32,7 @@ class RedisCache(Thread):
 		"""
 		log.debug("---%s 心跳检测---" % parser_name)
 		self._redis.set(parser_name, 1)
-		self._redis.set_expire(parser_name, 1)
+		self._redis.set_expire(parser_name,self._redis_time)
 
 	def run(self):
 		while not self._thread_stop:
