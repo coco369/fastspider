@@ -67,6 +67,14 @@ LOGGER = dict(
 	# LOG_ENCODING="utf8",  # 日志文件编码
 )
 
+# 【必填项】 REDIS
+REDISDB_URL = ""
+REDISDB_IP = "127.0.0.1"
+REDISDB_PORT = 6379
+REDISDB_USER_PASS = ""
+# 默认 0 到 15 共16个数据库
+REDISDB_DB = 1
+
 # 导入自定义settings的配置文件
 try:
 	from settings import *

@@ -1,19 +1,17 @@
 # encoding=utf-8
+import time
 
 import fastspider
-from fastspider.item.item import Item
-
-
-class DoubanItem(Item):
-
-	def __init__(self, href, title):
-		self.table_name = "douban"
-		self.href = href
-		self.title = title
 
 
 class TestSpider(fastspider.LightSpider):
-	start_urls = ["https://movie.douban.com/top250"]
+	douban_url = "https://movie.douban.com/top250"
+
+	def start_requests(self):
+		while True:
+			yield fastspider.Request(url=self.douban_url)
+			time.sleep(3)
+		# yield fastspider.Request(url=self.douban_url)
 
 	def parser(self, request, response):
 		movies = response.xpath('//*[@id="content"]/div/div[1]/ol/li')
@@ -21,9 +19,7 @@ class TestSpider(fastspider.LightSpider):
 			href = movie.xpath('./div/div[2]/div[1]/a/@href')[0].get()
 			title = movie.xpath('./div/div[2]/div[1]/a/span[1]/text()')[0].get()
 
-			# print(href, title)
-			# douban_item = DoubanItem(href, title)
-			# yield douban_item
+			print(href, title)
 
 
 if __name__ == "__main__":

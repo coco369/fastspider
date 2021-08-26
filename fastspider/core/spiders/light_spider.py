@@ -10,6 +10,7 @@ Desc: fastspider核心代码, 轻量级爬虫air_spider
 from threading import Thread
 
 from fastspider.cache.item_cache import ItemCache
+from fastspider.cache.redis_cache import RedisCache
 from fastspider.core.base.light_base import LightBase
 from fastspider.core.controller.spider_controller import LightSpiderController
 from fastspider.db.memory_db import MemoryDB
@@ -31,6 +32,8 @@ class LightSpider(LightBase, Thread):
 
 		self._memory_db = MemoryDB()
 		self._item_cache = ItemCache(redis_key="light_spider")
+		self._redis_parser_name = []
+		self._redis_cache = None
 
 		self._parser_controller = []
 
@@ -40,7 +43,8 @@ class LightSpider(LightBase, Thread):
 
 	def add_task(self):
 		"""
-			将start_response中的任务Request对象存储到内存队列中
+			将 start_requests 中的任务Request对象存储到内存队列中
+			注意: 如果 start_requests执行的是死循环, 则 redis 无法记录心跳数据
 		:return: None
 		"""
 		for req in self.start_requests():
@@ -50,6 +54,7 @@ class LightSpider(LightBase, Thread):
 			# 将当前请求的类名添加到request对象上
 			req.parser_name = req.parser_name or self.name
 			self._memory_db.put(req)
+			self._redis_parser_name.append(req.parser_name)
 
 	def all_thread_task_done(self):
 		"""
@@ -84,10 +89,15 @@ class LightSpider(LightBase, Thread):
 
 			self._parser_controller.append(spider_controller)
 
+		# item线程
 		self._item_cache.start()
 
 		# 将任务放在内存中
 		self.add_task()
+
+		# redis 心跳线程
+		self._redis_cache = RedisCache(list(set(self._redis_parser_name)))
+		self._redis_cache.start()
 
 		# 死循环, 一直执行任务, 判断任务task是否执行完成, 如果任务执行完毕, 则关闭各种链接，如mysql, 浏览器对象
 		while True:
@@ -99,6 +109,9 @@ class LightSpider(LightBase, Thread):
 
 				# 暂停解析item任务线程
 				self._item_cache.stop()
+
+				# 暂停redis缓存线程
+				self._redis_cache.stop()
 
 				log.info("无任务, 爬虫执行完毕")
 				break
