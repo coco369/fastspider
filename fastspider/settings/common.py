@@ -67,7 +67,16 @@ LOGGER = dict(
 	# LOG_ENCODING="utf8",  # 日志文件编码
 )
 
-# 【必填项】 REDIS
+# 去重
+ITEM_FILTER_ENABLE = False  # item 去重
+
+# Redis中表的配置
+REDIS_KEY = "fastspider"
+REDIS_MISSION_REQUESTS = "{redis_key}:f_all_requests"
+REDIS_MISSION_FAIL_REQUESTS = "{redis_key}:f_fail_requests"
+REDIS_SPIDER_STATUS = "{redis_key}:f_spider_status"
+
+# 【必填项】 REDIS链接
 REDISDB_URL = ""
 REDISDB_IP = "127.0.0.1"
 REDISDB_PORT = 6379
@@ -76,6 +85,13 @@ REDISDB_USER_PASS = ""
 REDISDB_DB = 1
 # 心跳检测的数据缓存的时间，以秒为单位
 REDISDB_TIME = 5
+
+# 【必填项】MYSQL
+MYSQL_HOST = "127.0.0.1"
+MYSQL_PORT = 3306
+MYSQL_DATABASE = "dc_manege"
+MYSQL_USERNAME = "root"
+MYSQL_PASSWORD = "spider@123"
 
 # 导入自定义settings的配置文件
 try:

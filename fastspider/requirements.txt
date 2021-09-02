@@ -6,3 +6,4 @@ PyMySQL>=1.0.2
 lxml>=4.6.3
 beautifulsoup4>=4.9.3
 loguru>=0.5.3
+dbutils>=2.0.2

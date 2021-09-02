@@ -89,3 +89,38 @@ class RedisDB(object):
 			设置过期时间
 		"""
 		return self._client.expire(key, seconds)
+
+	def zadd(self, table_name, requests, priority=0):
+		"""
+			使用有序set集合进行数据的存储
+		:param table_name: 集合名称
+		:param requests:  请求支持list 或者单个值
+		:param priority:  优先等级，支持list 或者 单个值, 可不传, 不传的情况下默认请求的优先级为0。或者也可以传入列表, 根据列表中的值来定义请求的执行优先级, 值越低, 越优先。
+		:return:
+		"""
+		if isinstance(requests, list):
+			if not isinstance(priority, list):
+				priority = [priority] * len(requests)
+			else:
+				assert len(priority) != len(requests), "请求队列和优先级的值需要一一对应"
+
+			# 批量操作
+			pipeline = self._client.pipeline()
+			pipeline.multi()
+			for key, value in zip(requests, priority):
+				pipeline.execute_command("ZADD", table_name, value, key)
+			return pipeline.execute()
+		else:
+			return self._client.execute_command("ZADD", table_name, priority, requests)
+
+	def zrem(self, table_name, values):
+		"""
+
+		:param table_name:
+		:param requests:
+		:return:
+		"""
+		if isinstance(values, list):
+			self._client.zrem(table_name, *values)
+		else:
+			self._client.zrem(table_name, values)

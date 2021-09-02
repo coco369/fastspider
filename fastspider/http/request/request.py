@@ -41,6 +41,7 @@ class Request(object):
 		"priority": 300,
 		"parser_name": None,
 		"callback": None,
+		"filter_request": False,
 		"use_session": False,
 		"download_middleware": None,
 		"web_render": False,
@@ -50,7 +51,7 @@ class Request(object):
 	}
 
 	def __init__(self, url="", method="", retry_time=0, priority=300, parser_name=None, callback=None,
-	             use_session=False, download_middleware=None, web_render=False, web_render_time=0,
+	             filter_request=False, use_session=False, download_middleware=None, web_render=False, web_render_time=0,
 	             web_render_scroll=False, request_sync=False, **kwargs):
 		self.url = url
 		self.method = method
@@ -58,6 +59,7 @@ class Request(object):
 		self.priority = priority
 		self.parser_name = parser_name
 		self.callback = callback
+		self.filter_request = filter_request
 		self.request_sync = request_sync
 		self.use_session = use_session
 		self.download_middleware = download_middleware
@@ -80,6 +82,15 @@ class Request(object):
 		:return:
 		"""
 		return self.priority < other.priority
+
+	@property
+	def to_dict(self):
+		request_dict = {}
+
+		for key, value in self.__dict__.items():
+			request_dict[key] = value
+
+		return request_dict
 
 	@property
 	def _make_session(self):
@@ -142,8 +153,6 @@ class Request(object):
 		self.request_kwargs.update(proxies=proxies)
 
 		# TODO: 如果没有隧道代理, 则可以使用IP代理
-
-
 
 		# 浏览器渲染
 		use_session = self.use_session if self.use_session else common.USE_SESSION
