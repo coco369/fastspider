@@ -5,7 +5,7 @@ Email: 779598160@qq.com
 
 CreateTime: 2021/07/29
 
-Desc: fastspider核心代码, 轻量级爬虫air_spider
+Desc: fastspider核心代码, 轻量级爬虫light_spider
 """
 from threading import Thread
 

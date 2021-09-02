@@ -5,7 +5,7 @@ Email: 779598160@qq.com
 
 CreateTime: 2021/07/29
 
-Desc: fastspider核心爬虫AirSpider的基类代码
+Desc: fastspider核心爬虫LightSpider的基类代码
 """
 from fastspider.http.request.request import Request
 

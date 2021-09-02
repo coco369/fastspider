@@ -1,0 +1,22 @@
+# encoding=utf-8
+
+import fastspider
+
+
+class {{spider_class_name}}(fastspider.CycleSpider):
+
+    start_urls = ["http://www.baidu.com"]
+
+	def start_requests(self):
+	    for url in self.start_urls:
+	        yield fastspider.Request(url)
+
+	def parser(self, request, response):
+	    print(response.text)
+
+
+if __name__ == "__main__":
+    spider = {{spider_class_name}}()
+
+    spider.start_monitor_task()
+    spider.start()
