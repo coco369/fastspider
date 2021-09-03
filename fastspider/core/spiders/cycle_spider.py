@@ -21,9 +21,6 @@ class CycleSpider(CycleBase, Scheduler):
 		self._mysql_db = MysqlDB()
 		self._redis_db = RedisDB()
 
-
-
 	def run(self):
-
 		# 启动
 		self._start()

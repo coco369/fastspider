@@ -97,3 +97,10 @@ def time_to_timestamp(strtime):
 	"""
 	timeArray = time.strptime(strtime, "%Y-%m-%d %H:%M")
 	return int(time.mktime(timeArray))
+
+
+def get_current_timestamp():
+	"""
+		获取当前时间的时间戳
+	"""
+	return int(time.time())

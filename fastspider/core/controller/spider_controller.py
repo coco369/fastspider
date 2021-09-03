@@ -15,6 +15,7 @@ from threading import Thread
 from fastspider.http.request.request import Request
 from fastspider.item.item import Item
 from fastspider.settings import common
+from fastspider.utils.logger import log
 
 
 class BaseController(Thread):
@@ -41,6 +42,13 @@ class BaseController(Thread):
 	def add_parser(self, parser):
 		self._parser.append(parser)
 
+	def run(self):
+		while not self._thread_stop:
+			pass
+
+	def deal_requests(self, requests):
+		pass
+
 
 class LightSpiderController(BaseController):
 
@@ -53,12 +61,15 @@ class LightSpiderController(BaseController):
 	def run(self):
 
 		while not self._thread_stop:
-			request = self._memory_db.get_nowait()
-			if not request:
-				self.has_task_flag = False
-			else:
-				self.has_task_flag = True
-				self.deal_requests([request])
+			try:
+				request = self._memory_db.get_nowait()
+				if not request:
+					self.has_task_flag = False
+				else:
+					self.has_task_flag = True
+					self.deal_requests([request])
+			except Exception as e:
+				log.error(f"轻量级爬虫lightspider执行失败, 失败原因: {e}")
 
 	def deal_requests(self, requests):
 		"""
@@ -109,9 +120,9 @@ class LightSpiderController(BaseController):
 						# TODO: 记录任务失败的信息
 						print(e)
 						self._memory_db.put(request)
-						# if request.retry_time:
-						# 	request.retry_time -= 1
-						# 	self._memory_db.put(request)
+					# if request.retry_time:
+					# 	request.retry_time -= 1
+					# 	self._memory_db.put(request)
 					# finally:
 					# 	print("释放相关的链接, 如数据库、浏览器的链接")
 

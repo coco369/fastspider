@@ -9,8 +9,12 @@ Desc: 配置文件
 """
 
 # 爬虫配置
-
 SPIDER_THREAD_COUNT = 1  # 爬虫并发数
+
+# 爬虫相关
+# 周期性爬虫使用到的参数
+COLLECTOR_SLEEP_TIME = 1  # 从redis任务队列中获取任务到内存队列的间隔
+COLLECTOR_TASK_COUNT = 10  # 每次获取任务数量
 
 # request网络请求超时时间
 REQUEST_TIMEOUT = 22  # 等待服务器响应的超时时间，浮点数，或(connect timeout, read timeout)元组
