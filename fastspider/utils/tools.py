@@ -1,5 +1,5 @@
 # encoding=utf-8
-
+import pickle
 import time
 
 from fastspider.settings import common
@@ -104,3 +104,11 @@ def get_current_timestamp():
 		获取当前时间的时间戳
 	"""
 	return int(time.time())
+
+
+def dumps_obj(obj):
+	return pickle.dumps(obj)
+
+
+def loads_obj(obj_str):
+	return pickle.loads(obj_str)

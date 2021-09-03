@@ -55,8 +55,8 @@ class Scheduler(threading.Thread):
 			parser_controller.start()
 
 			self._parsers_controller.append(parser_controller)
-		# 3. 下发任务
 
+		# 3. 下发任务
 
 	def run(self):
 

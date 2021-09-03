@@ -92,6 +92,13 @@ class Request(object):
 
 		return request_dict
 
+	@classmethod
+	def from_dict(cls, request_dict):
+		for key, value in request_dict.items():
+			if isinstance(value, bytes):
+				request_dict[key] = tools.loads_obj(value)
+		return cls(**request_dict)
+
 	@property
 	def _make_session(self):
 		"""

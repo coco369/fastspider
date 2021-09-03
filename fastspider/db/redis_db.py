@@ -115,12 +115,87 @@ class RedisDB(object):
 
 	def zrem(self, table_name, values):
 		"""
-
-		:param table_name:
-		:param requests:
+			移除有序set集合中的元素, 如果元素不存在则忽略
+		:param table_name: 集合名称
+		:param values: 移除的元素, 支持列表 或者 单个值
 		:return:
 		"""
 		if isinstance(values, list):
 			self._client.zrem(table_name, *values)
 		else:
 			self._client.zrem(table_name, values)
+
+	def zcount(self, table_name, priority_min=None, priority_max=None):
+		"""
+			计算有序set集合中的元素的个数
+		:param table_name: 集合名称
+		:param priority_min: 优先级范围的最小值
+		:param priority_max: 优先级范围的最大值
+		:return:
+		"""
+		if priority_min != None and priority_max != None:
+			self._client.zcount(table_name, priority_min, priority_max)
+		else:
+			self._client.zcount(table_name)
+
+	def zrangebyscore_set_score(
+			self, table, priority_min, priority_max, score, count=None
+	):
+		"""
+		@summary: 返回指定分数区间的数据 闭区间， 同时修改分数
+		---------
+		@param table: 集合名称
+		@param priority_min: 最小分数
+		@param priority_max: 最大分数
+		@param score: 分数值
+		@param count: 获取的数量，为空则表示分数区间内的全部数据
+		---------
+		@result:
+		"""
+
+		# 使用lua脚本， 保证操作的原子性
+		lua = """
+			-- local key = KEYS[1]
+			local min_score = ARGV[1]
+			local max_score = ARGV[2]
+			local set_score = ARGV[3]
+			local count = ARGV[4]
+			
+			-- 取值
+			local datas = nil
+			if count then
+				datas = redis.call('zrangebyscore', KEYS[1], min_score, max_score, 'withscores','limit', 0, count)
+			else
+				datas = redis.call('zrangebyscore', KEYS[1], min_score, max_score, 'withscores')
+			end
+			
+			local real_datas = {} -- 数据
+			--修改优先级
+			for i=1, #datas, 2 do
+				local data = datas[i]
+				local score = datas[i+1]
+				
+				table.insert(real_datas, data) -- 添加数据
+				
+				redis.call('zincrby', KEYS[1], set_score - score, datas[i])
+			end
+			
+			return real_datas
+		
+		"""
+		cmd = self._client.register_script(lua)
+		if count:
+			res = cmd(keys=[table], args=[priority_min, priority_max, score, count])
+		else:
+			res = cmd(keys=[table], args=[priority_min, priority_max, score])
+
+		return res
+
+	def zremrangebyscore(self, table_name, priority_min, priority_max):
+		"""
+			用于移除有序set集中，指定分数（score）区间内的所有成员
+		:param table_name: 集合名称
+		:param priority_min: 优先级最小值
+		:param priority_max: 优先级最大值
+		"""
+		return self._client.zremrangebyscore(table_name, priority_min, priority_max)
