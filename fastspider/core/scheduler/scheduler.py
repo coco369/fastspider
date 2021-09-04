@@ -22,11 +22,11 @@ from fastspider.utils import tools
 class Scheduler(threading.Thread):
 	__common_settings__ = {}
 
-	def __init__(self, redis_key=None, thread_count=None):
+	def __init__(self, redis_key=None, thread_count=None, cycle_interval=1):
 		"""
 			定时执行爬虫任务的调度器
 		"""
-		self.cycle_interval = 0
+		self._cycle_interval = cycle_interval
 		self._thread_count = thread_count or common.SPIDER_THREAD_COUNT
 		self._parsers = []
 		self._parsers_controller = []

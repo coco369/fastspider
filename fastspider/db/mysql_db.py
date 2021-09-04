@@ -176,3 +176,21 @@ class MysqlDB(object):
 			return True
 		finally:
 			self.close(conn, cursor)
+
+	def execute(self, sql):
+		"""
+			执行sql
+		:param sql: sql语句
+		:return: True表示更新成功  False表示更新失败
+		"""
+		try:
+			conn, cursor = self.get_connect()
+			cursor.execute(sql)
+			conn.commit()
+		except Exception as e:
+			log.error(f"执行sql语句失败, sql: {sql}， error: {e}")
+			return False
+		else:
+			return True
+		finally:
+			self.close(conn, cursor)
