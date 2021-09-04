@@ -26,11 +26,13 @@ class BaseController(Thread):
 
 	has_task_flag = False
 
-	def __init__(self):
+	def __init__(self, collector):
 		super(BaseController, self).__init__()
 
 		self._thread_stop = False
 		self._parser = []
+
+		self._collector = collector
 
 	def has_task(self):
 		return self.has_task_flag
@@ -41,13 +43,6 @@ class BaseController(Thread):
 
 	def add_parser(self, parser):
 		self._parser.append(parser)
-
-	def run(self):
-		while not self._thread_stop:
-			pass
-
-	def deal_requests(self, requests):
-		pass
 
 
 class LightSpiderController(BaseController):
@@ -134,3 +129,61 @@ class LightSpiderController(BaseController):
 				time.sleep(sleep_times)
 			else:
 				time.sleep(common.SPIDER_SLEEP_TIME)
+
+
+class CycleSpiderController(BaseController):
+
+	def __init__(self, collector):
+		super(CycleSpiderController, self).__init__()
+		self._thread_stop = False
+		self._parser = []
+
+		self._collector = collector
+
+	def run(self):
+		while not self._thread_stop:
+			requests = self._collector.get_requests(common.SPIDER_TASK_COUNT)
+			if not requests:
+				self.has_task_flag = False
+			else:
+				self.has_task_flag = True
+				self.deal_requests(requests)
+
+	def deal_requests(self, requests):
+		for request in requests:
+			response = None
+
+			request = request["request_obj"]
+			request_redis = request["request_redis"]
+
+			for parser in self._parser:
+				try:
+					if parser.name == request.parser_name:
+
+						# TODO: download_middleware处理
+						response = request.get_response()
+						# 判断是否有回调函数
+						if request.callback:
+							# 检查回调函数是否可用
+							callback_parser = (request.callback)
+							results = callback_parser(request, response)
+						else:
+							results = parser.parser(request, response)
+
+						if results and not isinstance(results, Iterable):
+							raise Exception(f"{parser.name}.{request.callback}必须可迭代的返回值")
+
+						for result in results or []:
+							if isinstance(result, Request):
+								result.parser_name = result.parser_name or parser.name
+								# 如果是同步的callback, 将解析request对象添加到requests中
+								if result.request_sync:
+									requests.append(result)
+								else:
+									# 异步, 将任务添加到 任务队列中
+									self._memory_db.put(result)
+							elif isinstance(result, Item):
+								# 存入item缓存中
+								self._item_cache.put(result)
+				except Exception as e:
+					log.exception(e)

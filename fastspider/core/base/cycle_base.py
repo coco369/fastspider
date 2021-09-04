@@ -18,8 +18,8 @@ class CycleBase(LightBase):
 		"""
 		pass
 
-	def start_requests(self, task):
-		"""
-			启动任务, task为任务信息
-		"""
-		pass
+	# def start_requests(self, task):
+	# 	"""
+	# 		启动任务, task为任务信息
+	# 	"""
+	# 	pass

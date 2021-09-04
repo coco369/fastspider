@@ -82,7 +82,7 @@ class Collector(threading.Thread):
 				log.info("重置丢失任务完毕，共{}条".format(len(datas)))
 
 		# 取任务，只取当前时间戳以内的任务，同时将任务分数修改为 current_timestamp + setting.REQUEST_LOST_TIMEOUT
-		requests_list = self._db.zrangebyscore_set_score(
+		requests_list = self._redis_db.zrangebyscore_set_score(
 			self._mission_request_name,
 			priority_min="-inf",
 			priority_max=current_timestamp,
@@ -146,3 +146,15 @@ class Collector(threading.Thread):
 
 	def stop(self):
 		self._thread_stop = True
+
+	def get_requests_count(self):
+		"""
+			获取待处理任务数量
+		"""
+		return len(self._todo_requests) or self._redis_db.zcount(self._mission_request_name) or 0
+
+	def is_collector_task(self):
+		"""
+			获取任务处理状态
+		"""
+		return self._is_collector_task

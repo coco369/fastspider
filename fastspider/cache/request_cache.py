@@ -41,6 +41,15 @@ class RequestCache(threading.Thread):
 				log.error(f"向redis中添加待执行任务失败, 失败原因: {e}")
 			tools.sleep_time(1)
 
+	def flush(self):
+		"""
+			主动刷新任务
+		"""
+		try:
+			self.__add_request_to_db()
+		except Exception as e:
+			log.error(f"向redis中添加待执行任务失败, 失败原因: {e}")
+
 	def stop(self):
 		self._thread_stop = True
 
@@ -48,9 +57,14 @@ class RequestCache(threading.Thread):
 		"""
 			向请求request队列中加入请求
 		:param request: 请求
-		:return:
 		"""
 		self._requests_deque.append(request)
+
+	def get_request_count(self):
+		"""
+			获取待执行队列中的任务数
+		"""
+		return len(self._requests_deque)
 
 	def add_del_request(self, request):
 		"""
@@ -112,3 +126,9 @@ class RequestCache(threading.Thread):
 				self._redis_db.zrem(self._mission_request_name, del_requests_list)
 
 		self._add_request_to_db_status = False
+
+	def is_adding_request_to_db(self):
+		"""
+			获取线程是否还在向db中添加数据
+		"""
+		return self._add_request_to_db_status

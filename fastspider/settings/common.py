@@ -18,6 +18,8 @@ COLLECTOR_TASK_COUNT = 10  # 每次获取任务数量
 
 # request防丢机制。（指定的REQUEST_LOST_TIMEOUT时间内request还没做完，会重新下发 重做）
 REQUEST_LOST_TIMEOUT = 600  # 10分钟
+# 每个parser从内存队列中获取任务的数量
+SPIDER_TASK_COUNT = 1
 
 # request网络请求超时时间
 REQUEST_TIMEOUT = 22  # 等待服务器响应的超时时间，浮点数，或(connect timeout, read timeout)元组
