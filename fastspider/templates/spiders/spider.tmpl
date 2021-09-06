@@ -3,7 +3,7 @@
 import fastspider
 
 
-class {{spider_class_name}}(fastspider.CycleSpider):
+class {{spider_class_name}}(fastspider.Spider):
 
     start_urls = ["http://www.baidu.com"]
 
@@ -16,7 +16,4 @@ class {{spider_class_name}}(fastspider.CycleSpider):
 
 
 if __name__ == "__main__":
-    spider = {{spider_class_name}}()
-
-    spider.start_monitor_task()
-    spider.start()
+    {{spider_class_name}}().start()

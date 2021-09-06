@@ -21,9 +21,8 @@ def create():
 		nargs="+",
 		help="创建爬虫\n"
 		     "如 fastspider startspider -s <spider_name> <spider_type> "
-		     "spider_type=light     表示创建轻量爬虫LightSpider; "
-		     "spider_type=nomal     分布式海量数据抓取爬虫NomalSpider; "
-		     "spider_type=cycle     分布式周期性抓取爬虫CycleSpiser; ",
+		     "spider_type=1     表示创建轻量爬虫LightSpider; "
+		     "spider_type=2     分布式海量数据抓取爬虫Spider; ",
 		metavar=""
 	)
 
@@ -32,11 +31,11 @@ def create():
 	if args.spider:
 		spider_name, *spider_type = args.spider
 		if not len(spider_type):
-			spider_type = "light"
+			spider_type = "1"
 		elif len(spider_type) == 1:
 			spider_type = spider_type[0]
 		else:
-			raise Exception('spider_type error, must choice "light" "nomal" "cycle" ')
+			raise Exception('spider_type error, must choice "1" "2" ')
 
 		CreateFastSpider().create(spider_name, spider_type)
 

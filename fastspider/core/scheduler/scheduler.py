@@ -119,3 +119,10 @@ class Scheduler(threading.Thread):
 
 		for parser in self._parsers_controller:
 			parser.stop()
+
+	def start_spider(self):
+		"""
+			启动爬虫
+		"""
+
+		pass

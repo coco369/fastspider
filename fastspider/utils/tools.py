@@ -1,4 +1,5 @@
 # encoding=utf-8
+import datetime
 import pickle
 import time
 
@@ -104,6 +105,13 @@ def get_current_timestamp():
 		获取当前时间的时间戳
 	"""
 	return int(time.time())
+
+
+def format_date(format="%Y-%m-%d %H:%M:%S"):
+	"""
+		格式化日期
+	"""
+	return datetime.datetime.now().strftime(format)
 
 
 def dumps_obj(obj):

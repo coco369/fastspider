@@ -105,7 +105,6 @@ MYSQL_PORT = 3306
 MYSQL_DATABASE = "dc_manege"
 MYSQL_USERNAME = "root"
 MYSQL_PASSWORD = "spider@123"
-MYSQL_RECORD_TABLE = "mission_record"
 
 # 导入自定义settings的配置文件
 try:
