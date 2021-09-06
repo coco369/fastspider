@@ -60,6 +60,9 @@ class RequestCache(threading.Thread):
 		"""
 		self._requests_deque.append(request)
 
+		if self.get_request_count() > self.MAX_REQUESTS_COUNT:
+			self.flush()
+
 	def get_request_count(self):
 		"""
 			获取待执行队列中的任务数
