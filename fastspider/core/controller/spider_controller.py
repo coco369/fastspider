@@ -193,7 +193,7 @@ class SpiderController(BaseController):
 				except Exception as e:
 					log.exception(e)
 
-			# 删除
+			# 删除redis中已处理的任务
 			if request_redis:
 				self._request_cache.add_del_request(request_redis)
 

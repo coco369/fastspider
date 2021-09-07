@@ -5,10 +5,13 @@ import fastspider
 
 
 class TestSpider(fastspider.Spider):
-	douban_url = "https://movie.douban.com/top250"
+	start_urls = ["https://movie.douban.com/top250", "https://movie.douban.com/top250?start=25&filter=",
+	              "https://movie.douban.com/top250?start=50&filter=", "https://movie.douban.com/top250?start=75&filter=",
+	              "https://movie.douban.com/top250?start=100&filter="]
 
 	def start_requests(self):
-		yield fastspider.Request(url=self.douban_url)
+		for url in self.start_urls:
+			yield fastspider.Request(url=url)
 
 	def parser(self, request, response):
 		movies = response.xpath('//*[@id="content"]/div/div[1]/ol/li')

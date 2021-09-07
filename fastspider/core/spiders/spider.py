@@ -43,7 +43,7 @@ class Spider(CycleBase, Scheduler):
 					log.info("无任务, 爬虫执行完毕")
 					break
 
-				# 休息5秒后再次检查爬虫是否还在运行
+				# 休息1秒后再次检查爬虫是否还在运行
 				tools.sleep_time(1)
 		except Exception as e:
 			log.error(f"爬虫执行异常, 异常原因: {e}")
