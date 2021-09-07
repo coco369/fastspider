@@ -131,14 +131,15 @@ class LightSpiderController(BaseController):
 				time.sleep(common.SPIDER_SLEEP_TIME)
 
 
-class CycleSpiderController(BaseController):
+class SpiderController(BaseController):
 
-	def __init__(self, collector):
-		super(CycleSpiderController, self).__init__()
+	def __init__(self, collector, request_cache):
+		super(BaseController, self).__init__()
 		self._thread_stop = False
 		self._parser = []
 
 		self._collector = collector
+		self._request_cache = request_cache
 
 	def run(self):
 		while not self._thread_stop:
@@ -152,9 +153,11 @@ class CycleSpiderController(BaseController):
 	def deal_requests(self, requests):
 		for request in requests:
 			response = None
-
-			request = request["request_obj"]
-			request_redis = request["request_redis"]
+			try:
+				request_redis = request["request_redis"]
+				request = request["request_obj"]
+			except Exception as e:
+				log.error(e)
 
 			for parser in self._parser:
 				try:
@@ -181,9 +184,16 @@ class CycleSpiderController(BaseController):
 									requests.append(result)
 								else:
 									# 异步, 将任务添加到 任务队列中
-									self._memory_db.put(result)
+									# self._memory_db.put(result)
+									pass
 							elif isinstance(result, Item):
 								# 存入item缓存中
-								self._item_cache.put(result)
+								# self._item_cache.put(result)
+								pass
 				except Exception as e:
 					log.exception(e)
+
+			# 删除
+			if request_redis:
+
+				self._request_cache.add_del_request(request_redis)

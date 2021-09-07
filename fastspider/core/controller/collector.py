@@ -48,6 +48,8 @@ class Collector(threading.Thread):
 		:return:
 		"""
 		current_timestamp = tools.get_current_timestamp()
+		if len(self._todo_requests) > self._get_task_count:
+			return
 
 		spider_count = self._redis_db.zcount(self._mission_spider_status,
 		                                     priority_min=current_timestamp - (self._interval + 10),
@@ -122,7 +124,7 @@ class Collector(threading.Thread):
 	def run(self):
 		while not self._thread_stop:
 			try:
-				self._add_node_heartbeat()
+				# self._add_node_heartbeat()
 				self._put_data()
 			except Exception as e:
 				log.error(f"{e}")

@@ -103,7 +103,7 @@ class RequestCache(threading.Thread):
 			# TODO: 请求去重, 暂时不考虑
 			filter_request = request.filter_request
 
-			request_list.append(request)
+			request_list.append(str(request.to_dict))
 			priority_list.append(priority)
 
 			if len(request_list) > self.__class__.MAX_REQUESTS_COUNT:
@@ -116,8 +116,8 @@ class RequestCache(threading.Thread):
 			self._redis_db.zadd(self._mission_request_name, request_list, priority_list)
 
 		# TODO: 不太明白
-		for callback in callbacks:
-			callback()
+		# for callback in callbacks:
+		# 	callback()
 
 		# 将完成的任务从redis中移除
 		if self._del_requests_deque:

@@ -31,6 +31,12 @@ class RedisDB(object):
 
 		self.connect()
 
+	def __repr__(self):
+		if self._url:
+			return f"<RedisDB url:{self._url}>"
+
+		return f"<RedisDB host: {self._ip} port: {self._ip} password: {self._password}>"
+
 	@property
 	def _client(self):
 		try:
@@ -102,15 +108,17 @@ class RedisDB(object):
 			if not isinstance(priority, list):
 				priority = [priority] * len(requests)
 			else:
-				assert len(priority) != len(requests), "请求队列和优先级的值需要一一对应"
+				assert len(priority) == len(requests), "请求队列和优先级的值需要一一对应"
 
 			# 批量操作
 			pipeline = self._client.pipeline()
 			pipeline.multi()
 			for key, value in zip(requests, priority):
 				pipeline.execute_command("ZADD", table_name, value, key)
+				log.info(f"RedisDB 中插入任务成功, 数据格式为: {key}")
 			return pipeline.execute()
 		else:
+			log.info(f"RedisDB 中插入任务成功, 数据格式为: {requests}")
 			return self._client.execute_command("ZADD", table_name, priority, requests)
 
 	def zrem(self, table_name, values):
@@ -134,9 +142,9 @@ class RedisDB(object):
 		:return:
 		"""
 		if priority_min != None and priority_max != None:
-			self._client.zcount(table_name, priority_min, priority_max)
+			return self._client.zcount(table_name, priority_min, priority_max)
 		else:
-			self._client.zcount(table_name)
+			return self._client.zcard(table_name)
 
 	def zrangebyscore_set_score(
 			self, table, priority_min, priority_max, score, count=None

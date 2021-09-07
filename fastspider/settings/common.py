@@ -95,16 +95,16 @@ REDISDB_IP = "127.0.0.1"
 REDISDB_PORT = 6379
 REDISDB_USER_PASS = ""
 # 默认 0 到 15 共16个数据库
-REDISDB_DB = 1
+REDISDB_DB = 0
 # 心跳检测的数据缓存的时间，以秒为单位
 REDISDB_TIME = 5
 
 # 【必填项】MYSQL
 MYSQL_HOST = "127.0.0.1"
 MYSQL_PORT = 3306
-MYSQL_DATABASE = "dc_manege"
+MYSQL_DATABASE = "dc_manage"
 MYSQL_USERNAME = "root"
-MYSQL_PASSWORD = "spider@123"
+MYSQL_PASSWORD = "123123"
 
 # 导入自定义settings的配置文件
 try:

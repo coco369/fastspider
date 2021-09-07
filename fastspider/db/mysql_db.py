@@ -60,7 +60,7 @@ class MysqlDB(object):
 			)
 		except Exception as e:
 			log.error(
-				f"数据库链接【失败】, 账号信息: username: {self.username}, host: {self.host}, port: {self.port}, database: {self.database}, 详细失败原因: {e}")
+				f"数据库链接【失败】, 账号信息: username: {self.username}, password: {self.password}, host: {self.host}, port: {self.port}, database: {self.database}, 详细失败原因: {e}")
 		else:
 			log.debug(
 				f"数据库链接【成功】, 账号信息: username: {self.username}, host: {self.host}, port: {self.port}, database: {self.database}")

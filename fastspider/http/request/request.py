@@ -83,6 +83,10 @@ class Request(object):
 		"""
 		return self.priority < other.priority
 
+	def __repr__(self):
+
+		return f"<Request {self.url}>"
+
 	@property
 	def to_dict(self):
 		request_dict = {}

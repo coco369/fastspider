@@ -42,3 +42,4 @@ class LightBase(object):
 	def name(self):
 		# 示例方法, 获取类名
 		return self.__class__.__name__
+

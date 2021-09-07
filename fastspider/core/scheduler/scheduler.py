@@ -13,7 +13,7 @@ from fastspider.http.request.request import Request
 
 from fastspider.cache.request_cache import RequestCache
 from fastspider.core.controller.collector import Collector
-from fastspider.core.controller.spider_controller import CycleSpiderController
+from fastspider.core.controller.spider_controller import SpiderController
 from fastspider.settings import common
 from fastspider.utils.logger import log
 from fastspider.utils import tools
@@ -27,8 +27,10 @@ class Scheduler(threading.Thread):
 			定时执行爬虫任务的调度器
 		"""
 		self._thread_count = thread_count or common.SPIDER_THREAD_COUNT
+		self._check_task_interval = check_task_interval
 		self._parsers = []
 		self._parsers_controller = []
+		self._all_mission_done = False
 
 		super(Scheduler, self).__init__()
 
@@ -40,25 +42,37 @@ class Scheduler(threading.Thread):
 		self._request_cache = RequestCache(self._redis_key)
 		self._collector = Collector(redis_key)
 
-		self._base_controller = CycleSpiderController
+	def __repr__(self):
+		return f"<{self.name} 线程name: {threading.currentThread().name} 线程ID: {threading.currentThread().ident}>"
 
 	def _start(self):
 		# 启动相关线程
 		# 1. 总请求任务/请求失败任务/请求删除任务 与 Redis的同步 线程
 		self._request_cache.start()
-		# 2. 获取Redis中任务请求request的 线程
+		# 2. 获取Redis中任务请求request 并 写入到_todo_requests中的 线程
 		self._collector.start()
 
-		for i in range(self._thread_count):
-			parser_controller = self._base_controller(
-				collector=self._collector
-			)
-			for parser in self._parsers:
-				parser_controller.add_parser(parser)
-			# 启动线程
-			parser_controller.start()
+		# for i in range(self._thread_count):
+		# 	parser_controller = self._base_controller(
+		# 		collector=self._collector
+		# 	)
+		# 	for parser in self._parsers:
+		# 		parser_controller.add_parser(parser)
+		# 	# 启动线程
+		# 	parser_controller.start()
+		#
+		# 	self._parsers_controller.append(parser_controller)
 
-			self._parsers_controller.append(parser_controller)
+		parser_controller = SpiderController(
+			collector=self._collector,
+			request_cache=self._request_cache
+		)
+		for parser in self._parsers:
+			parser_controller.add_parser(parser)
+		# 启动线程
+		parser_controller.start()
+
+		self._parsers_controller.append(parser_controller)
 
 		# 3. 下发任务
 		# TODO: 可能多进程之间会添加重复的任务, 下发任务处将使用redis 锁进行处理。暂时先考虑启动单进程处理任务, 不考虑锁的问题。
@@ -73,20 +87,14 @@ class Scheduler(threading.Thread):
 			log.info(f"检测有待执行任务 {todo_requests_count} 条, 不重新下发新任务, 将接着上次异常终止处继续执行抓取任务")
 		else:
 			for parser in self._parsers:
-				request = parser.start_requests()
-				if request and not isinstance(request, Request):
-					raise Exception("返回参数错误, 当前只支持yield fastspider.Request对象")
-				request.parser_name = request.parser_name or parser.name
+				for request in parser.start_requests():
+					if request and not isinstance(request, Request):
+						raise Exception("返回参数错误, 当前只支持yield fastspider.Request对象")
+					request.parser_name = request.parser_name or parser.name
+					self._request_cache.add_request(request)
 
 		# 刷新一波待执行任务
 		self._request_cache.flush()
-
-	def run(self):
-
-		self._start()
-
-		while True:
-			pass
 
 	def all_thread_is_done(self):
 		"""
@@ -121,7 +129,7 @@ class Scheduler(threading.Thread):
 
 	def start_spider(self):
 		"""
-			启动爬虫
+			启动爬虫, 记录爬虫的开始时间等相关记录
 		"""
 
 		pass
