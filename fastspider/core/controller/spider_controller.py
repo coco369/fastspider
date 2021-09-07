@@ -195,5 +195,12 @@ class SpiderController(BaseController):
 
 			# 删除
 			if request_redis:
-
 				self._request_cache.add_del_request(request_redis)
+
+		# 休眠
+		if common.SPIDER_SLEEP_TIME:
+			if isinstance(common.SPIDER_SLEEP_TIME, (tuple, list)) and len(common.SPIDER_SLEEP_TIME) == 2:
+				sleep_times = random.randint(common.SPIDER_SLEEP_TIME[0], common.SPIDER_SLEEP_TIME[1])
+				time.sleep(sleep_times)
+			else:
+				time.sleep(common.SPIDER_SLEEP_TIME)

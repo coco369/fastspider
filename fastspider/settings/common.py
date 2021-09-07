@@ -12,7 +12,7 @@ Desc: 配置文件
 SPIDER_THREAD_COUNT = 1  # 爬虫并发数
 
 # 爬虫相关
-# 周期性爬虫使用到的参数
+# 分布式爬虫使用到的参数
 COLLECTOR_SLEEP_TIME = 1  # 从redis任务队列中获取任务到内存队列的间隔
 COLLECTOR_TASK_COUNT = 10  # 每次获取任务数量
 
@@ -34,7 +34,7 @@ USE_SESSION = False
 # 支持格式, 如 SPIDER_SLEEP_TIME = 3
 # 如 SPIDER_SLEEP_TIME = [2, 5] 或者 (2, 5) 则间隔为 2~5秒之间的随机数，包含2和5
 SPIDER_SLEEP_TIME = (
-	0
+	1, 2
 )
 
 # 是否开启代理
@@ -87,7 +87,6 @@ REDIS_MISSION_REQUESTS = "{redis_key}:f_all_requests"
 REDIS_MISSION_FAIL_REQUESTS = "{redis_key}:f_fail_requests"
 # 爬虫状态任务表
 REDIS_SPIDER_STATUS = "{redis_key}:f_spider_status"
-
 
 # 【必填项】 REDIS链接
 REDISDB_URL = ""
