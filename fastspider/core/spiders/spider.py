@@ -39,6 +39,8 @@ class Spider(CycleBase, Scheduler):
 			while True:
 				if self.all_thread_is_done():
 					self.all_thread_stop()
+
+					log.info("无任务, 爬虫执行完毕")
 					break
 
 				# 休息5秒后再次检查爬虫是否还在运行

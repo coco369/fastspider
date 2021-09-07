@@ -52,27 +52,17 @@ class Scheduler(threading.Thread):
 		# 2. 获取Redis中任务请求request 并 写入到_todo_requests中的 线程
 		self._collector.start()
 
-		# for i in range(self._thread_count):
-		# 	parser_controller = self._base_controller(
-		# 		collector=self._collector
-		# 	)
-		# 	for parser in self._parsers:
-		# 		parser_controller.add_parser(parser)
-		# 	# 启动线程
-		# 	parser_controller.start()
-		#
-		# 	self._parsers_controller.append(parser_controller)
+		for i in range(self._thread_count):
+			parser_controller = SpiderController(
+				collector=self._collector,
+				request_cache=self._request_cache
+			)
+			for parser in self._parsers:
+				parser_controller.add_parser(parser)
+			# 启动线程
+			parser_controller.start()
 
-		parser_controller = SpiderController(
-			collector=self._collector,
-			request_cache=self._request_cache
-		)
-		for parser in self._parsers:
-			parser_controller.add_parser(parser)
-		# 启动线程
-		parser_controller.start()
-
-		self._parsers_controller.append(parser_controller)
+			self._parsers_controller.append(parser_controller)
 
 		# 3. 下发任务
 		# TODO: 可能多进程之间会添加重复的任务, 下发任务处将使用redis 锁进行处理。暂时先考虑启动单进程处理任务, 不考虑锁的问题。
