@@ -70,7 +70,7 @@ class Request(object):
 		self.web_render_time = web_render_time
 		self.web_render_scroll = web_render_scroll
 		# meta参数的深拷贝
-		self.meta = dict(meta)
+		self.meta = dict(meta) if meta else {}
 		self.sleep_time = sleep_time
 
 		self.request_kwargs = {}
