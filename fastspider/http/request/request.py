@@ -9,6 +9,7 @@ Desc: fastspider核心代码, 封装requests包
 """
 import requests
 import urllib3
+import copy
 from requests.adapters import HTTPAdapter
 
 from fastspider.http import user_agent
@@ -32,7 +33,7 @@ class Request(object):
 	session = None
 
 	# 组装非必须传入的参数
-	__request_attrs__ = ["headers", "data", "params", "cookies", "json", "timeout", "proxies", "verify", "meta"]
+	__request_attrs__ = ["headers", "data", "params", "cookies", "json", "timeout", "proxies", "verify"]
 	# 组装默认传递的参数
 	__default_requests_attrs__ = {
 		"url": "",
@@ -47,12 +48,13 @@ class Request(object):
 		"web_render": False,
 		"web_render_time": 0,
 		"web_render_scroll": False,
-		"request_sync": False
+		"request_sync": False,
+		"meta": None,
 	}
 
 	def __init__(self, url="", method="", retry_time=0, priority=300, parser_name=None, callback=None,
 	             filter_request=False, use_session=False, download_middleware=None, web_render=False, web_render_time=0,
-	             web_render_scroll=False, request_sync=False, **kwargs):
+	             web_render_scroll=False, request_sync=False, meta=None, **kwargs):
 		self.url = url
 		self.method = method
 		self.retry_time = retry_time
@@ -66,6 +68,8 @@ class Request(object):
 		self.web_render = web_render
 		self.web_render_time = web_render_time
 		self.web_render_scroll = web_render_scroll
+		# meta参数的深拷贝
+		self.meta = dict(meta)
 
 		self.request_kwargs = {}
 		for key, value in kwargs.items():
@@ -123,7 +127,7 @@ class Request(object):
 
 	def get_response(self):
 		# 获取meta参数
-		meta = self.request_kwargs.pop("meta") if self.request_kwargs.get("meta") else ""
+		meta = self.meta
 
 		# 设置请求超时时间
 		self.request_kwargs.setdefault(
@@ -224,4 +228,5 @@ class Request(object):
 				self.request_kwargs,
 			)
 		)
+
 		return response
