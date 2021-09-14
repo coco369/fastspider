@@ -16,6 +16,7 @@ from fastspider.http.request.request import Request
 from fastspider.item.item import Item
 from fastspider.settings import common
 from fastspider.utils.logger import log
+from fastspider.utils import tools
 
 
 class BaseController(Thread):
@@ -77,6 +78,9 @@ class LightSpiderController(BaseController):
 			for parser in self._parser:
 				# 判断当前请求是否是请求对应的爬虫触发的。避免同时多个爬虫一起执行时, 请求request和对应的爬虫匹配错误
 				if request.parser_name == parser.name:
+					if request.sleep_time:
+						tools.sleep_time(request.sleep_time)
+
 					try:
 						# 解析request
 						# if request.download_middleware:

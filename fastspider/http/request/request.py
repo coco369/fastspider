@@ -50,11 +50,12 @@ class Request(object):
 		"web_render_scroll": False,
 		"request_sync": False,
 		"meta": None,
+		"sleep_time": 0
 	}
 
 	def __init__(self, url="", method="", retry_time=0, priority=300, parser_name=None, callback=None,
 	             filter_request=False, use_session=False, download_middleware=None, web_render=False, web_render_time=0,
-	             web_render_scroll=False, request_sync=False, meta=None, **kwargs):
+	             web_render_scroll=False, request_sync=False, meta=None, sleep_time=0, **kwargs):
 		self.url = url
 		self.method = method
 		self.retry_time = retry_time
@@ -70,6 +71,7 @@ class Request(object):
 		self.web_render_scroll = web_render_scroll
 		# meta参数的深拷贝
 		self.meta = dict(meta)
+		self.sleep_time = sleep_time
 
 		self.request_kwargs = {}
 		for key, value in kwargs.items():
