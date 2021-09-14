@@ -80,6 +80,7 @@ class LightSpider(LightBase, Thread):
 		"""
 			启动线程
 		"""
+		self.start_callback()
 		# 先将任务监听的控制方法启动, 再通过add_task将需要爬取的request对象写入, 通过while检测任务执行的情况, 任务执行完, 则暂定任务_thread_stop设置为True
 		for i in range(self._thread_count):
 			spider_controller = LightSpiderController(self._memory_db, self._item_cache)
@@ -115,3 +116,6 @@ class LightSpider(LightBase, Thread):
 
 				log.info("无任务, 爬虫执行完毕")
 				break
+				
+		self.end_callback()
+		self._started.clear()
