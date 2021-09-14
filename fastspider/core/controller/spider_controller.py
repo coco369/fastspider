@@ -26,7 +26,7 @@ class BaseController(Thread):
 
 	has_task_flag = False
 
-	def __init__(self, collector):
+	def __init__(self, collector=None):
 		super(BaseController, self).__init__()
 
 		self._thread_stop = False
