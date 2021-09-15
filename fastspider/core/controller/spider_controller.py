@@ -157,6 +157,7 @@ class SpiderController(BaseController):
 	def deal_requests(self, requests):
 		for request in requests:
 			response = None
+			del_request_redis_after_request_to_db = False
 			try:
 				request_redis = request["request_redis"]
 				request = request["request_obj"]
@@ -191,19 +192,21 @@ class SpiderController(BaseController):
 								if result.request_sync:
 									requests.append(result)
 								else:
-									# 异步, 将任务添加到 任务队列中
-									# self._memory_db.put(result)
-									pass
+									result.parser_name = request.parser_name
+									self._request_cache.add_request(result)
 							elif isinstance(result, Item):
 								# 存入item缓存中
 								# self._item_cache.put(result)
 								pass
+
+						del_request_redis_after_request_to_db = True
 				except Exception as e:
 					log.exception(e)
 
 			# 删除redis中已处理的任务
 			if request_redis:
-				self._request_cache.add_del_request(request_redis)
+				if del_request_redis_after_request_to_db:
+					self._request_cache.add_del_request(request_redis)
 
 		# 休眠
 		if common.SPIDER_SLEEP_TIME:
