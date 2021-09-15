@@ -172,7 +172,11 @@ class SpiderController(BaseController):
 						# 判断是否有回调函数
 						if request.callback:
 							# 检查回调函数是否可用
-							callback_parser = (request.callback)
+							callback_parser = (
+								request.callback
+								if callable(request.callback)
+								else tools.get_method(parser, request.callback)
+							)
 							results = callback_parser(request, response)
 						else:
 							results = parser.parser(request, response)

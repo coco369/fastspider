@@ -98,6 +98,10 @@ class Request(object):
 		request_dict = {}
 
 		for key, value in self.__dict__.items():
+			if key == "callback":
+				request_dict[key] = getattr(value, "__name__") if value else "parser"
+				continue
+
 			request_dict[key] = value
 
 		return request_dict

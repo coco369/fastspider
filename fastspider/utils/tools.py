@@ -4,6 +4,7 @@ import pickle
 import time
 
 from fastspider.settings import common
+from fastspider.utils.logger import log
 
 
 def key_to_hump(key):
@@ -120,3 +121,14 @@ def dumps_obj(obj):
 
 def loads_obj(obj_str):
 	return pickle.loads(obj_str)
+
+
+def get_method(obj, name):
+	"""
+		获取对象的可执行方法
+	"""
+	try:
+		return getattr(obj, str(name))
+	except AttributeError as e:
+		log.error("Method %r not found in: %s" % (name, obj))
+		return None
