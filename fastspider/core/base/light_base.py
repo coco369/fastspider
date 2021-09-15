@@ -7,7 +7,11 @@ CreateTime: 2021/07/29
 
 Desc: fastspider核心爬虫LightSpider的基类代码
 """
+from datetime import datetime
+
 from fastspider.http.request.request import Request
+from fastspider.waring.feishu import FeiShuRobot
+from fastspider.settings import common
 
 
 class LightBase(object):
@@ -32,11 +36,22 @@ class LightBase(object):
 		pass
 
 	def start_callback(self):
-		pass
+		"""
+			向飞书\企业微信\钉钉 推送任务开始信息
+		"""
+		# TODO: 先实现向飞书机器人推送信息
+		if common.FEISHU_SECRET and common.FEISHU_WEB_HOOK:
+			msg = f"爬虫{self.name}开始启动, 启动时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+			FeiShuRobot().send_msg(msg)
 
 	def end_callback(self):
-
-		pass
+		"""
+			向飞书\企业微信\钉钉 推送任务结束信息
+		"""
+		# TODO: 先实现向飞书机器人推送信息
+		if common.FEISHU_SECRET and common.FEISHU_WEB_HOOK:
+			msg = f"爬虫{self.name}执行完毕, 结束时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+			FeiShuRobot().send_msg(msg)
 
 	@property
 	def name(self):

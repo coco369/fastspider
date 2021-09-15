@@ -105,6 +105,14 @@ MYSQL_DATABASE = "dc_manage"
 MYSQL_USERNAME = "root"
 MYSQL_PASSWORD = "123123"
 
+# 预警/消息通知
+
+# 飞书自定义机器人 webhook地址
+FEISHU_WEB_HOOK = ''
+# 飞书自定义机器人 签名校验参数
+FEISHU_SECRET = ''
+
+
 # 导入自定义settings的配置文件
 try:
 	from settings import *

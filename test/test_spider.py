@@ -8,9 +8,7 @@ class TestSpider(fastspider.LightSpider):
 	douban_url = "https://movie.douban.com/top250"
 
 	def start_requests(self):
-		while True:
-			yield fastspider.Request(url=self.douban_url)
-			time.sleep(3)
+		yield fastspider.Request(url=self.douban_url)
 		# yield fastspider.Request(url=self.douban_url)
 
 	def parser(self, request, response):
