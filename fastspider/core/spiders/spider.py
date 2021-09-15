@@ -30,6 +30,8 @@ class Spider(CycleBase, Scheduler):
 			启动爬虫
 		"""
 		try:
+			self.start_callback()
+
 			if not self._parsers:
 				self._parsers.append(self)
 
@@ -40,6 +42,8 @@ class Spider(CycleBase, Scheduler):
 				if self.all_thread_is_done():
 					self.all_thread_stop()
 
+					self.end_callback()
+					
 					log.info("无任务, 爬虫执行完毕")
 					break
 

@@ -117,7 +117,7 @@ class LightSpiderController(BaseController):
 
 					except Exception as e:
 						# TODO: 记录任务失败的信息
-						print(e)
+						log.exception(e)
 						self._memory_db.put(request)
 					# if request.retry_time:
 					# 	request.retry_time -= 1
