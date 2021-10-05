@@ -94,14 +94,14 @@ class ItemCache(Thread):
 		:return:
 		"""
 		pipelines = []
-		for pipeline in common.ITEM_PIPELINES:
-			module, class_name = pipeline.rsplit(".", 1)
+		for pipeline_path in common.ITEM_PIPELINES:
+			module, class_name = pipeline_path.rsplit(".", 1)
 			pipeline_cls = importlib.import_module(module).__getattribute__(class_name)
-
-			if not isinstance(pipeline_cls(), BasePipeline):
+			pipeline = pipeline_cls()
+			if not isinstance(pipeline, BasePipeline):
 				raise Exception(f"{class_name}必须继承 BasePipeline ")
 
-			pipelines.append(pipeline_cls())
+			pipelines.append(pipeline)
 		return pipelines
 
 	def __save_item_to_db(self, table_name, item_data, is_update=False):
